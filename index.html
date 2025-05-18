@@ -71,7 +71,10 @@
 
             <section id="quick-links-dropzone" class="quick-links-section card">
                 <div class="card-header">
-                    <h2>Quick Links</h2>
+                    <div id="quick-links-header-title-container">
+                        <button id="back-to-parent-folder-btn" class="icon-btn small-btn" aria-label="Back to parent folder" style="display: none; margin-right: 10px;"><i class="fas fa-arrow-left"></i></button>
+                        <h2 id="quick-links-title">Quick Links</h2>
+                    </div>
                     <button id="add-bookmark-shortcut-btn" class="icon-btn small-btn" aria-label="Add Bookmark via settings">
                         <i class="fas fa-plus"></i>
                     </button>
@@ -80,6 +83,15 @@
                     <p class="no-bookmarks-message" style="display: none;">No bookmarks yet. Add some manually or drag & drop links here!</p>
                 </div>
                  <p id="drag-drop-hint-text" class="drag-drop-hint">Drag & drop web links or selected bookmarks here!</p>
+            </section>
+
+            <section id="recent-activity-section" class="card" style="display: none;">
+                <div class="card-header">
+                    <h2><i class="fas fa-history"></i> Recent Activity</h2>
+                </div>
+                <div id="recent-activity-container" class="recent-activity-list">
+                    <p class="no-recent-activity-message">No recent activity yet.</p>
+                </div>
             </section>
         </main>
     </div>
@@ -126,12 +138,21 @@
                 </div>
 
                 <div class="settings-category">
+                    <h3><i class="fas fa-image"></i> Custom Background</h3>
+                    <label for="background-image-input">Upload Background Image:</label>
+                    <input type="file" id="background-image-input" accept="image/*" style="margin-bottom: 10px; width:100%;">
+                    <button id="clear-background-image-btn" class="action-btn secondary-btn">
+                        <i class="fas fa-times-circle"></i> Clear Background Image
+                    </button>
+                    <p class="settings-note">Note: True adaptive UI colors based on the image is complex. Adjust theme colors manually if needed after setting a background.</p>
+                </div>
+
+                <div class="settings-category">
                     <h3><i class="fas fa-paint-brush"></i> Colors</h3>
                     <div class="color-presets-container">
                         <label>Color Presets:</label>
                         <div class="preset-buttons">
                             <button class="preset-btn" data-preset="defaultDark">Default Dark</button>
-                            <!-- Nordic Light removed -->
                             <button class="preset-btn" data-preset="oceanicBlue">Oceanic Blue</button>
                             <button class="preset-btn" data-preset="forestGreen">Forest Green</button>
                             <button class="preset-btn" data-preset="monochromeDark">Mono Dark</button>
@@ -241,16 +262,35 @@
                         <span class="slider round"></span>
                     </label>
 
+                    <h4 style="margin-top: 20px;">Add New Folder:</h4>
+                    <form id="add-folder-form" style="margin-bottom: 20px;">
+                        <label for="folder-name">Folder Name:</label>
+                        <input type="text" id="folder-name" placeholder="e.g., Social Media" required>
+                        <label for="parent-folder-select-for-new-folder">Parent Folder (optional):</label>
+                        <select id="parent-folder-select-for-new-folder">
+                            <option value="root">Root Level</option>
+                        </select>
+                        <button type="submit" class="action-btn"><i class="fas fa-folder-plus"></i> Add Folder</button>
+                    </form>
+
                     <h4 style="margin-top: 20px;">Add New Bookmark:</h4>
                     <form id="add-bookmark-form">
                         <label for="bookmark-name">Name:</label>
                         <input type="text" id="bookmark-name" placeholder="e.g., My Favorite Site" required>
                         <label for="bookmark-url">URL:</label>
                         <input type="url" id="bookmark-url" placeholder="https://example.com" required>
+                        <label for="parent-folder-select-for-bookmark">Parent Folder:</label>
+                        <select id="parent-folder-select-for-bookmark">
+                            <option value="root">Root Level</option>
+                        </select>
                         <button type="submit" class="action-btn"><i class="fas fa-plus-circle"></i> Add Bookmark</button>
                     </form>
-                    <h4 style="margin-top: 20px;">Manage Bookmarks:</h4>
+
+                    <h4 style="margin-top: 20px;">Manage Bookmarks & Folders:</h4>
                     <ul id="manage-bookmarks-list"></ul>
+                    <button id="delete-all-bookmarks-btn" class="action-btn" style="margin-top: 15px; background-color: var(--danger-color); color: white !important;">
+                        <i class="fas fa-trash-alt"></i> Delete All Bookmarks & Folders
+                    </button>
                 </div>
             </div>
         </div>

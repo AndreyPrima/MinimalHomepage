@@ -29,6 +29,8 @@
     --clock-widget-display: flex; 
     --quicklink-grid-columns: repeat(auto-fill, minmax(180px, 1fr)); 
     --drag-drop-hint-display: block; 
+
+    --body-bg-image: none; /* For custom background image */
 }
 
 * {
@@ -43,11 +45,15 @@ body {
     color: var(--text-primary);
     line-height: 1.6;
     padding: 20px;
-    transition: background-color 0.3s, color 0.3s, font-family 0.2s;
+    transition: background-color 0.3s, color 0.3s, font-family 0.2s, background-image 0.3s;
     min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: flex-start;
+    background-image: var(--body-bg-image);
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
 }
 
 .container {
@@ -87,33 +93,34 @@ input, select, button, textarea {
     padding: 10px 15px;
     transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s, color 0.2s, border-radius 0.2s;
 }
+input[type="file"] {
+    padding: 8px; /* Adjust padding for file input */
+}
+
 
 input[type="color"] {
-    -webkit-appearance: none; /* Remove default appearance */
+    -webkit-appearance: none; 
     -moz-appearance: none;
     appearance: none;
     width: 100%; 
-    height: 38px; /* Consistent height with other inputs */
-    padding: 0; /* Remove padding that might interfere with swatch */
+    height: 38px; 
+    padding: 0; 
     border: 1px solid var(--border-color);
     background-color: var(--bg-tertiary); 
     border-radius: var(--border-radius); 
     cursor: pointer;
-    overflow: hidden; /* Clip the swatch if it overflows */
+    overflow: hidden; 
 }
-/* Styling the color swatch itself */
 input[type="color"]::-webkit-color-swatch-wrapper {
-    padding: 3px; /* Padding around the swatch */
+    padding: 3px; 
 }
 input[type="color"]::-webkit-color-swatch {
      border: none;
-     /* Make swatch slightly smaller than the input's border-radius */
      border-radius: calc(var(--border-radius) - 3px); 
 }
-input[type="color"]::-moz-color-swatch { /* Firefox */
+input[type="color"]::-moz-color-swatch { 
     border: none;
     border-radius: calc(var(--border-radius) - 3px);
-    /* Firefox might need explicit sizing for the swatch if it doesn't fill */
     width: calc(100% - 6px);
     height: calc(100% - 6px);
     margin: 3px;
@@ -124,7 +131,7 @@ input::placeholder, textarea::placeholder {
     color: var(--text-placeholder);
 }
 
-input:not([type="color"]):focus, select:focus, textarea:focus {
+input:not([type="color"]):not([type="file"]):focus, select:focus, textarea:focus {
     outline: none;
     border-color: var(--accent-primary);
     box-shadow: 0 0 0 3px var(--accent-primary-shadow);
@@ -162,7 +169,7 @@ button {
 
 .action-btn {
     background-color: var(--accent-primary);
-    color: var(--bg-primary);
+    color: var(--bg-primary) !important; /* Ensure text is visible on accent bg */
     border: none;
     padding: 10px 20px;
     transition: background-color 0.2s, color 0.2s; 
@@ -176,12 +183,12 @@ button {
 }
 .action-btn.secondary-btn {
     background-color: var(--bg-tertiary);
-    color: var(--text-secondary);
+    color: var(--text-secondary) !important;
     border: 1px solid var(--border-color);
 }
 .action-btn.secondary-btn:hover {
     background-color: var(--border-color);
-    color: var(--text-primary);
+    color: var(--text-primary) !important;
 }
 
 .card {
@@ -201,6 +208,10 @@ button {
     margin-bottom: 15px;
     border-bottom: 1px solid var(--border-color);
     padding-bottom: 10px;
+}
+#quick-links-header-title-container {
+    display: flex;
+    align-items: center;
 }
 .card-header h2 {
     margin-bottom: 0;
@@ -282,7 +293,7 @@ header {
 }
 .search-submit-btn {
     background-color: var(--accent-secondary); 
-    color: var(--bg-primary); 
+    color: var(--bg-primary) !important; 
     border: none;
     padding: 10px;
     width: 42px; 
@@ -305,7 +316,7 @@ header {
     gap: 12px;
     min-height: 60px;
 }
-.bookmark-item {
+.bookmark-item, .bookmark-folder-item {
     display: flex;
     align-items: center;
     gap: 10px;
@@ -318,13 +329,25 @@ header {
     overflow: hidden;
     border: 1px solid var(--border-color);
 }
-.bookmark-item:hover {
+.bookmark-item:hover, .bookmark-folder-item:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0,0,0,0.2);
     background-color: var(--border-color); 
     border-color: var(--accent-primary);
 }
-.bookmark-item img.favicon {
+.bookmark-folder-item {
+    flex-direction: column; /* Stack icon and name */
+    justify-content: center;
+    text-align: center;
+    cursor: pointer;
+    padding: 15px 12px;
+}
+.bookmark-folder-item .folder-icon {
+    font-size: 2em; /* Larger than favicon */
+    color: var(--accent-primary); /* Use accent for folder icon */
+    margin-bottom: 5px;
+}
+.bookmark-item img.favicon, .bookmark-folder-item .folder-icon {
     width: var(--favicon-size);
     height: var(--favicon-size);
     border-radius: 3px; 
@@ -333,12 +356,19 @@ header {
     flex-shrink: 0;
     transition: width 0.2s ease-out, height 0.2s ease-out;
 }
-.bookmark-item .bookmark-name {
+.bookmark-folder-item .folder-icon { /* Override size for folder icon specifically */
+    width: auto; /* Let font-size control */
+    height: auto;
+}
+.bookmark-item .bookmark-name, .bookmark-folder-item .folder-name {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     flex-grow: 1;
     font-size: 0.9em;
+}
+.bookmark-folder-item .folder-name {
+    width: 100%; /* Ensure it takes full width for text-overflow */
 }
 .no-bookmarks-message {
     grid-column: 1 / -1;
@@ -422,7 +452,7 @@ header {
 
 .modal-body {
     overflow-y: auto;
-    padding-right: 10px;
+    padding-right: 10px; /* For scrollbar */
 }
 
 .settings-category {
@@ -452,6 +482,7 @@ header {
 }
 .settings-category input[type="text"],
 .settings-category input[type="url"],
+.settings-category input[type="file"],
 .settings-category select {
     width: 100%;
     margin-bottom: 12px;
@@ -503,7 +534,7 @@ header {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 15px;
-    align-items: end; /* Align items to the bottom for consistent label-input alignment */
+    align-items: end; 
 }
 .color-picker-grid > div { 
     display: flex;
@@ -562,13 +593,13 @@ input.toggle-switch:checked + .slider:before {
 }
 
 
-#add-bookmark-form {
+#add-bookmark-form, #add-folder-form {
     display: flex;
     flex-direction: column;
     gap: 10px;
     margin-bottom: 20px;
 }
-#add-bookmark-form button {
+#add-bookmark-form button, #add-folder-form button {
     align-self: flex-start;
 }
 
@@ -593,24 +624,98 @@ input.toggle-switch:checked + .slider:before {
     white-space: nowrap;
     text-overflow: ellipsis;
     margin-right: 10px;
+    display: flex; /* For icon and text */
+    align-items: center;
+    gap: 8px;
+}
+#manage-bookmarks-list .bookmark-info .fas { /* Folder/Link icon in manage list */
+    color: var(--text-secondary);
 }
 #manage-bookmarks-list .bookmark-url-small {
     font-size: 0.8em;
     color: var(--text-placeholder);
     display: block;
 }
-#manage-bookmarks-list .delete-bookmark-btn {
+#manage-bookmarks-list .item-controls button {
     background-color: transparent;
-    color: var(--danger-color);
     border: none;
-    font-size: 1.1em;
+    font-size: 1em; /* Adjusted size */
     padding: 5px;
     border-radius: 50%;
+    margin-left: 5px;
+}
+#manage-bookmarks-list .delete-bookmark-btn {
+    color: var(--danger-color);
 }
 #manage-bookmarks-list .delete-bookmark-btn:hover {
-    color: var(--bg-primary); 
+    color: var(--bg-primary) !important; 
     background-color: var(--danger-color);
 }
+#manage-bookmarks-list .rename-item-btn {
+    color: var(--accent-primary);
+}
+#manage-bookmarks-list .rename-item-btn:hover {
+    color: var(--bg-primary) !important;
+    background-color: var(--accent-primary);
+}
+/* Styling for renaming input in manage list */
+#manage-bookmarks-list input.rename-input {
+    flex-grow: 1;
+    padding: 4px 8px;
+    font-size: 0.95em;
+    margin-right: 10px;
+}
+
+
+/* Recent Activity Section */
+.recent-activity-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.recent-activity-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    background-color: var(--bg-tertiary);
+    border-radius: var(--border-radius);
+    font-size: 0.9em;
+    color: var(--text-primary);
+    text-decoration: none;
+    transition: background-color 0.2s, border-radius 0.2s;
+    border: 1px solid transparent; /* for hover effect */
+}
+.recent-activity-item:hover {
+    background-color: var(--border-color);
+    border-color: var(--accent-primary);
+}
+.recent-activity-item img.favicon {
+    width: 16px; /* Smaller favicon */
+    height: 16px;
+    border-radius: 2px;
+    object-fit: contain;
+}
+.recent-activity-item .activity-name {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex-grow: 1;
+}
+.recent-activity-item .activity-url {
+    font-size: 0.85em;
+    color: var(--text-secondary);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px; /* Limit URL display width */
+}
+.no-recent-activity-message {
+    text-align: center;
+    color: var(--text-secondary);
+    padding: 15px 10px;
+    font-size: 0.9em;
+}
+
 
 ::-webkit-scrollbar {
     width: 8px;
@@ -645,13 +750,17 @@ input.toggle-switch:checked + .slider:before {
 }
 @media (max-width: 480px) {
     .bookmarks-grid { 
-        grid-template-columns: 1fr !important; 
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)) !important; /* Allow 2 columns for folders/items */
     } 
-    .bookmark-item { padding: 10px; }
+     .bookmark-item, .bookmark-folder-item { padding: 10px; gap: 5px;}
+    .bookmark-folder-item .folder-icon { font-size: 1.5em; }
+    .bookmark-item .bookmark-name, .bookmark-folder-item .folder-name { font-size: 0.85em;}
+
     .clock-widget #time { font-size: 1.2em; }
     .clock-widget #date { font-size: 0.8em; }
     .settings-category h3 {font-size: 1.1em;}
     .modal-header h2 {font-size: 1.4em;}
     .action-btn { padding: 8px 15px; font-size: 0.9em;}
     .preset-btn { width: calc(50% - 4px); font-size: 0.8em; } 
+    .recent-activity-item .activity-url { max-width: 100px; }
 }
