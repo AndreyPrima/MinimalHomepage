@@ -8,19 +8,22 @@
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- Шрифты будут загружаться динамически через JS, если выбраны Google Fonts, Inter остается как базовый -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&family=Roboto:wght@300;400;500;700&family=Open+Sans:wght@300;400;500;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚀</text></svg>">
 </head>
 <body data-theme="dark">
 
     <div class="container">
         <header>
-            <div id="clock-widget" class="clock-widget">
-                <span id="time"></span>
-                <span id="date"></span>
+            <div id="clock-widget-container" class="clock-widget-container">
+                <div id="clock-widget" class="clock-widget">
+                    <span id="time"></span>
+                    <span id="date"></span>
+                </div>
             </div>
             <div class="title-container">
-                <h1 class="main-title">Dashboard</h1>
+                <h1 id="main-title-element" class="main-title">Dashboard</h1>
             </div>
             <button id="settings-btn" class="icon-btn" aria-label="Settings">
                 <i class="fas fa-cog"></i>
@@ -97,6 +100,47 @@
                     <select id="theme-select" disabled>
                         <option value="dark" selected>Dark Fusion</option>
                     </select>
+
+                    <label for="font-family-select" style="margin-top: 15px;">Font Family:</label>
+                    <select id="font-family-select">
+                        <option value="'Inter', sans-serif">Inter (Default)</option>
+                        <option value="'Roboto', sans-serif">Roboto</option>
+                        <option value="'Open Sans', sans-serif">Open Sans</option>
+                        <option value="'Lato', sans-serif">Lato</option>
+                        <option value="'Arial', sans-serif">Arial</option>
+                        <option value="'Verdana', sans-serif">Verdana</option>
+                        <option value="'Georgia', serif">Georgia</option>
+                        <option value="'Courier New', monospace">Courier New</option>
+                    </select>
+
+                    <label for="accent-color-input" style="margin-top: 15px;">Accent Color:</label>
+                    <input type="color" id="accent-color-input">
+
+                    <label for="border-radius-select" style="margin-top: 15px;">Rounded Corners:</label>
+                    <select id="border-radius-select">
+                        <option value="0px">Sharp</option>
+                        <option value="3px">Small</option>
+                        <option value="6px">Medium</option>
+                        <option value="10px">Large</option>
+                         <option value="15px">Extra Large</option>
+                    </select>
+
+                    <label for="main-title-text-input" style="margin-top: 15px;">Dashboard Title:</label>
+                    <input type="text" id="main-title-text-input" placeholder="Dashboard">
+                </div>
+
+                <div class="settings-category">
+                    <h3><i class="far fa-clock"></i> Clock Widget</h3>
+                     <label class="toggle-switch-label">
+                        Show Clock Widget:
+                        <input type="checkbox" id="show-clock-toggle" class="toggle-switch">
+                        <span class="slider round"></span>
+                    </label>
+                    <label for="clock-time-format-select" style="margin-top: 10px;">Time Format:</label>
+                    <select id="clock-time-format-select">
+                        <option value="24h">24-hour</option>
+                        <option value="12h">12-hour</option>
+                    </select>
                 </div>
 
                 <div class="settings-category">
@@ -105,7 +149,7 @@
                     <select id="default-search-engine">
                         <option value="google">Google</option>
                         <option value="duckduckgo">DuckDuckGo</option>
-                        <option value="searxng">SearXNG (Meta-Private)</option>
+                        <option value="searxng">SearXNG</option>
                         <option value="brave">Brave Search</option>
                         <option value="startpage">Startpage</option>
                         <option value="qwant">Qwant</option>
@@ -116,20 +160,39 @@
                         <option value="wolfram">Wolfram Alpha</option>
                         <option value="wikipedia">Wikipedia</option>
                         <option value="youtube">YouTube</option>
-                        <option value="github">GitHub (Code)</option>
+                        <option value="github">GitHub</option>
                         <option value="stackoverflow">Stack Overflow</option>
                         <option value="reddit">Reddit</option>
-                        <option value="npm">NPM (Packages)</option>
+                        <option value="npm">NPM</option>
                         <option value="archiveorg">Internet Archive</option>
-                        <option value="openverse">Openverse (Media)</option>
-                        <option value="unsplash">Unsplash (Photos)</option>
+                        <option value="openverse">Openverse</option>
+                        <option value="unsplash">Unsplash</option>
                         <option value="yandex">Yandex</option>
                         <option value="bing">Bing</option>
                     </select>
                 </div>
 
                 <div class="settings-category">
-                    <h3><i class="fas fa-bookmark"></i> Bookmarks</h3>
+                    <h3><i class="fas fa-bookmark"></i> Bookmarks (Quick Links)</h3>
+                    <label for="quicklink-icon-size-select">Icon Size:</label>
+                    <select id="quicklink-icon-size-select">
+                        <option value="16">Small (16px)</option>
+                        <option value="18">Medium (18px)</option>
+                        <option value="22">Large (22px)</option>
+                        <option value="26">Extra Large (26px)</option>
+                    </select>
+
+                    <label for="quicklink-grid-columns-select" style="margin-top: 15px;">Grid Columns:</label>
+                    <select id="quicklink-grid-columns-select">
+                        <option value="auto-fill">Auto</option>
+                        <option value="2">2 Columns</option>
+                        <option value="3">3 Columns</option>
+                        <option value="4">4 Columns</option>
+                        <option value="5">5 Columns</option>
+                        <option value="6">6 Columns</option>
+                    </select>
+
+                    <h4 style="margin-top: 20px;">Add New Bookmark:</h4>
                     <form id="add-bookmark-form">
                         <label for="bookmark-name">Name:</label>
                         <input type="text" id="bookmark-name" placeholder="e.g., My Favorite Site" required>
@@ -137,21 +200,12 @@
                         <input type="url" id="bookmark-url" placeholder="https://example.com" required>
                         <button type="submit" class="action-btn"><i class="fas fa-plus-circle"></i> Add Bookmark</button>
                     </form>
-                    <h4>Manage Bookmarks:</h4>
+                    <h4 style="margin-top: 20px;">Manage Bookmarks:</h4>
                     <ul id="manage-bookmarks-list"></ul>
-                </div>
-                 <div class="settings-category">
-                    <h3><i class="fas fa-code"></i> Custom CSS</h3>
-                    <textarea id="custom-css" placeholder="Enter your custom CSS here..." aria-label="Custom CSS input"></textarea>
-                    <div class="button-group">
-                        <button id="apply-custom-css" class="action-btn"><i class="fas fa-check"></i> Apply CSS</button>
-                        <button id="clear-custom-css" class="action-btn secondary-btn"><i class="fas fa-times"></i> Clear CSS</button>
-                    </div>
                 </div>
             </div>
         </div>
     </div>
-    <style id="user-custom-css"></style>
     <script src="script.js"></script>
 </body>
 </html>

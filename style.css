@@ -1,5 +1,5 @@
 :root {
-    --font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --app-font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     --bg-primary: #0d1117;
     --bg-secondary: #161b22;
     --bg-tertiary: #21262d;
@@ -10,14 +10,19 @@
     --accent-secondary: #3fb950;
     --accent-primary-hover: #79c0ff;
     --accent-secondary-hover: #56d364;
+    --accent-primary-shadow: rgba(88, 166, 255, 0.3);
+    --accent-primary-bg-hover: rgba(88, 166, 255, 0.1);
     --border-color: #30363d;
-    --border-radius: 6px;
+    --border-radius: 6px; /* Default, will be configurable */
     --card-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
     --input-shadow: none;
     --success-color: #3fb950;
     --danger-color: #f85149;
     --drag-over-bg: rgba(88, 166, 255, 0.1);
     --drag-over-border-color: var(--accent-primary);
+    --favicon-size: 18px;
+    --clock-widget-display: flex; /* Default, configurable */
+    --quicklink-grid-columns: repeat(auto-fill, minmax(180px, 1fr)); /* Default, configurable */
 }
 
 * {
@@ -27,12 +32,12 @@
 }
 
 body {
-    font-family: var(--font-family);
+    font-family: var(--app-font-family);
     background-color: var(--bg-primary);
     color: var(--text-primary);
     line-height: 1.6;
     padding: 20px;
-    transition: background-color 0.3s, color 0.3s;
+    transition: background-color 0.3s, color 0.3s, font-family 0.2s;
     min-height: 100vh;
     display: flex;
     justify-content: center;
@@ -75,7 +80,12 @@ input, select, button, textarea {
     background-color: var(--bg-tertiary);
     color: var(--text-primary);
     padding: 10px 15px;
-    transition: border-color 0.2s, box-shadow 0.2s;
+    transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s, color 0.2s, border-radius 0.2s;
+}
+input[type="color"] {
+    padding: 5px;
+    min-height: 40px;
+    width: 100%; /* Make color picker take full width in settings */
 }
 
 input::placeholder, textarea::placeholder {
@@ -85,11 +95,12 @@ input::placeholder, textarea::placeholder {
 input:focus, select:focus, textarea:focus {
     outline: none;
     border-color: var(--accent-primary);
-    box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.3); /* GitHub blue focus */
+    box-shadow: 0 0 0 3px var(--accent-primary-shadow);
 }
 
 button {
     cursor: pointer;
+    border-radius: var(--border-radius); /* Ensure buttons also use global radius */
 }
 
 .icon-btn {
@@ -98,7 +109,7 @@ button {
     color: var(--text-secondary);
     font-size: 1.5em;
     padding: 8px;
-    border-radius: 50%;
+    border-radius: 50%; /* Keep icon buttons circular unless specified */
     transition: color 0.2s, background-color 0.2s;
     width: 40px;
     height: 40px;
@@ -106,10 +117,9 @@ button {
     justify-content: center;
     align-items: center;
 }
-
 .icon-btn:hover {
     color: var(--accent-primary);
-    background-color: rgba(88, 166, 255, 0.1);
+    background-color: var(--accent-primary-bg-hover);
 }
 .icon-btn.small-btn {
     font-size: 1.1em;
@@ -119,7 +129,7 @@ button {
 
 .action-btn {
     background-color: var(--accent-primary);
-    color: var(--bg-primary); /* Темный текст на светлой кнопке для контраста */
+    color: var(--bg-primary);
     border: none;
     padding: 10px 20px;
     transition: background-color 0.2s;
@@ -128,7 +138,6 @@ button {
     gap: 8px;
     font-weight: 500;
 }
-
 .action-btn:hover {
     background-color: var(--accent-primary-hover);
 }
@@ -149,6 +158,7 @@ button {
     margin-bottom: 25px;
     box-shadow: var(--card-shadow);
     border: 1px solid var(--border-color);
+    transition: border-radius 0.2s;
 }
 
 .card-header {
@@ -176,11 +186,15 @@ header {
     flex-grow: 1;
     text-align: center;
 }
+.clock-widget-container{
+    min-width: 120px; /* Ensure space even if clock is hidden initially */
+    display: var(--clock-widget-display); /* Controlled by JS */
+    justify-content: flex-start;
+}
 .clock-widget {
     font-size: 0.9em;
     color: var(--text-secondary);
     text-align: left;
-    min-width: 120px;
 }
 .clock-widget #time {
     font-size: 1.4em;
@@ -238,8 +252,8 @@ header {
     color: var(--bg-primary);
     border: none;
     padding: 10px;
-    width: 42px;
-    height: 42px;
+    width: 42px; /* Fixed width */
+    height: 42px; /* Fixed height for square button */
     display: inline-flex;
     justify-content: center;
     align-items: center;
@@ -254,7 +268,7 @@ header {
 
 .bookmarks-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    grid-template-columns: var(--quicklink-grid-columns);
     gap: 12px;
     min-height: 60px;
 }
@@ -267,7 +281,7 @@ header {
     border-radius: var(--border-radius);
     text-decoration: none;
     color: var(--text-primary);
-    transition: transform 0.15s ease-out, box-shadow 0.15s ease-out, background-color 0.15s ease-out;
+    transition: transform 0.15s ease-out, box-shadow 0.15s ease-out, background-color 0.15s ease-out, border-radius 0.2s;
     overflow: hidden;
     border: 1px solid var(--border-color);
 }
@@ -278,12 +292,13 @@ header {
     border-color: var(--accent-primary);
 }
 .bookmark-item img.favicon {
-    width: 18px;
-    height: 18px;
-    border-radius: 3px;
+    width: var(--favicon-size);
+    height: var(--favicon-size);
+    border-radius: 3px; /* Keep favicon radius small */
     object-fit: contain;
     background-color: rgba(255,255,255,0.05);
     flex-shrink: 0;
+    transition: width 0.2s ease-out, height 0.2s ease-out;
 }
 .bookmark-item .bookmark-name {
     white-space: nowrap;
@@ -340,16 +355,17 @@ header {
 
 .modal-content {
     background-color: var(--bg-secondary);
-    margin: 8% auto;
+    margin: 5% auto; /* Reduced top margin */
     padding: 30px;
     border-radius: var(--border-radius);
     width: 90%;
     max-width: 700px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     animation: slideIn 0.3s ease-out;
-    max-height: 80vh;
+    max-height: 85vh; /* Increased max height */
     display: flex;
     flex-direction: column;
+    transition: border-radius 0.2s;
 }
 @keyframes slideIn { from { transform: translateY(-50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
@@ -373,7 +389,7 @@ header {
 
 .modal-body {
     overflow-y: auto;
-    padding-right: 10px; /* Space for scrollbar */
+    padding-right: 10px;
 }
 
 .settings-category {
@@ -406,21 +422,55 @@ header {
 .settings-category select {
     width: 100%;
     margin-bottom: 12px;
-    padding: 8px 12px;
+    padding: 8px 12px; /* Standardized padding */
 }
-.settings-category textarea {
-    width: 100%;
-    margin-bottom: 10px;
-    min-height: 120px;
-    resize: vertical;
-    font-family: 'Courier New', Courier, monospace;
+/* Toggle Switch Styles */
+.toggle-switch-label {
+    position: relative;
+    display: inline-flex; /* Changed to inline-flex */
+    align-items: center; /* Vertically align items */
+    gap: 10px; /* Space between text and switch */
+    margin-bottom: 12px;
+    font-weight: 500;
+    color: var(--text-secondary);
     font-size: 0.9em;
+    cursor: pointer;
 }
-.button-group {
-    display: flex;
-    gap: 10px;
-    margin-top: 10px;
+.toggle-switch {
+    opacity: 0;
+    width: 0;
+    height: 0;
 }
+.slider {
+    position: relative;
+    cursor: pointer;
+    width: 40px; /* Width of the switch */
+    height: 22px; /* Height of the switch */
+    background-color: var(--border-color);
+    transition: .4s;
+    border-radius: 22px; /* Fully rounded */
+}
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 16px; /* Size of the circle */
+    width: 16px;
+    left: 3px; /* Position from left */
+    bottom: 3px; /* Position from bottom */
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+input.toggle-switch:checked + .slider {
+    background-color: var(--accent-primary);
+}
+input.toggle-switch:focus + .slider {
+    box-shadow: 0 0 1px var(--accent-primary);
+}
+input.toggle-switch:checked + .slider:before {
+    transform: translateX(18px); /* How far the circle moves */
+}
+
 
 #add-bookmark-form {
     display: flex;
@@ -442,9 +492,10 @@ header {
     align-items: center;
     padding: 8px 10px;
     background-color: var(--bg-tertiary);
-    border-radius: var(--border-radius);
+    border-radius: var(--border-radius); /* Use global radius */
     margin-bottom: 8px;
     font-size: 0.95em;
+    transition: border-radius 0.2s;
 }
 #manage-bookmarks-list .bookmark-info {
     flex-grow: 1;
@@ -464,13 +515,13 @@ header {
     border: none;
     font-size: 1.1em;
     padding: 5px;
+    border-radius: 50%;
 }
 #manage-bookmarks-list .delete-bookmark-btn:hover {
     color: var(--bg-primary);
     background-color: var(--danger-color);
 }
 
-/* Custom Scrollbar for Modal Body and global (Webkit) */
 ::-webkit-scrollbar {
     width: 8px;
     height: 8px;
@@ -484,7 +535,7 @@ header {
     border-radius: 10px;
 }
 ::-webkit-scrollbar-thumb:hover {
-    background: var(--text-placeholder); /* Slightly lighter on hover */
+    background: var(--text-placeholder);
 }
 
 
@@ -492,16 +543,19 @@ header {
     body { padding: 10px; }
     .container { padding: 0 5px; }
     header { flex-direction: column; gap: 10px; }
-    .clock-widget { order: -1; text-align: center; width: 100%; }
-    #settings-btn { position: absolute; top: 15px; right: 15px; }
+    .clock-widget-container { order: -1; width: 100%; justify-content: center; }
+    .clock-widget { text-align: center;}
+    #settings-btn { position: absolute; top: 15px; right: 15px; z-index: 10; }
     h1.main-title { font-size: 1.8em; }
     #search-form { flex-direction: column; }
-    .bookmarks-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
-    .modal-content { margin: 5% auto; width: 95%; padding: 20px; }
+    .bookmarks-grid { grid-template-columns: var(--quicklink-grid-columns, repeat(auto-fill, minmax(150px, 1fr))); gap: 10px; }
+    .modal-content { margin: 5% auto; width: 95%; padding: 20px; max-height: 90vh;}
 }
 @media (max-width: 480px) {
-    .bookmarks-grid { grid-template-columns: 1fr; }
+    .bookmarks-grid { grid-template-columns: 1fr; } /* Force single column on very small screens if auto isn't enough */
     .bookmark-item { padding: 10px; }
     .clock-widget #time { font-size: 1.2em; }
     .clock-widget #date { font-size: 0.8em; }
+    .settings-category h3 {font-size: 1.1em;}
+    .modal-header h2 {font-size: 1.4em;}
 }
