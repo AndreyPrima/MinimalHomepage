@@ -51,9 +51,10 @@ body {
     justify-content: center;
     align-items: flex-start;
     background-image: var(--body-bg-image);
-    background-size: cover;
+    background-size: contain;
     background-position: center;
     background-attachment: fixed;
+    background-repeat: no-repeat;
 }
 
 .container {
