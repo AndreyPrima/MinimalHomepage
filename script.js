@@ -6,23 +6,31 @@ document.addEventListener('DOMContentLoaded', () => {
         clockTime, clockDate, clockWidgetContainer, quickLinksDropzone, dragDropHintText,
         quickLinkIconSizeSelect, accentColorInput, fontFamilySelect, showClockToggle,
         clockTimeFormatSelect, quicklinkGridColumnsSelect, borderRadiusSelect,
-        mainTitleTextInput, mainTitleElement;
+        mainTitleTextInput, mainTitleElement,
+        pageBgColorInput, cardBgColorInput, textPrimaryColorInput, accentSecondaryColorInput,
+        searchNewTabToggle, showDragDropHintToggle, searxngInstanceUrlInput,
+        presetButtonContainer;
 
     let bookmarks = [];
-    // Storage Keys
-    const STORAGE_KEY_PREFIX = 'dashboardAdvancedV4_';
+    const STORAGE_KEY_PREFIX = 'advDashV6.1_'; // Incremented version
     const STORAGE_KEY_BOOKMARKS = `${STORAGE_KEY_PREFIX}bookmarks`;
     const STORAGE_KEY_SEARCH_ENGINE = `${STORAGE_KEY_PREFIX}searchEngine`;
     const STORAGE_KEY_QUICKLINK_ICON_SIZE = `${STORAGE_KEY_PREFIX}qlIconSize`;
-    const STORAGE_KEY_ACCENT_COLOR = `${STORAGE_KEY_PREFIX}accentColor`;
+    const STORAGE_KEY_ACCENT_COLOR = `${STORAGE_KEY_PREFIX}accentPrimaryColor`;
     const STORAGE_KEY_FONT_FAMILY = `${STORAGE_KEY_PREFIX}fontFamily`;
     const STORAGE_KEY_SHOW_CLOCK = `${STORAGE_KEY_PREFIX}showClock`;
     const STORAGE_KEY_CLOCK_TIME_FORMAT = `${STORAGE_KEY_PREFIX}clockTimeFormat`;
     const STORAGE_KEY_QL_GRID_COLUMNS = `${STORAGE_KEY_PREFIX}qlGridColumns`;
     const STORAGE_KEY_BORDER_RADIUS = `${STORAGE_KEY_PREFIX}borderRadius`;
     const STORAGE_KEY_MAIN_TITLE = `${STORAGE_KEY_PREFIX}mainTitle`;
+    const STORAGE_KEY_PAGE_BG_COLOR = `${STORAGE_KEY_PREFIX}pageBgColor`;
+    const STORAGE_KEY_CARD_BG_COLOR = `${STORAGE_KEY_PREFIX}cardBgColor`;
+    const STORAGE_KEY_TEXT_PRIMARY_COLOR = `${STORAGE_KEY_PREFIX}textPrimaryColor`;
+    const STORAGE_KEY_ACCENT_SECONDARY_COLOR = `${STORAGE_KEY_PREFIX}accentSecondaryColor`;
+    const STORAGE_KEY_SEARCH_NEW_TAB = `${STORAGE_KEY_PREFIX}searchNewTab`;
+    const STORAGE_KEY_SHOW_DRAG_DROP_HINT = `${STORAGE_KEY_PREFIX}showDragDropHint`;
+    const STORAGE_KEY_SEARXNG_INSTANCE_URL = `${STORAGE_KEY_PREFIX}searxngInstanceUrl`;
 
-    // Default Settings Values
     const DEFAULT_SETTINGS = {
         [STORAGE_KEY_BOOKMARKS]: [{ name: "GitHub", url: "https://github.com" }, { name: "MDN Web Docs", url: "https://developer.mozilla.org/" }],
         [STORAGE_KEY_SEARCH_ENGINE]: 'google',
@@ -33,11 +41,40 @@ document.addEventListener('DOMContentLoaded', () => {
         [STORAGE_KEY_CLOCK_TIME_FORMAT]: '24h',
         [STORAGE_KEY_QL_GRID_COLUMNS]: 'auto-fill',
         [STORAGE_KEY_BORDER_RADIUS]: '6px',
-        [STORAGE_KEY_MAIN_TITLE]: 'Dashboard'
+        [STORAGE_KEY_MAIN_TITLE]: 'Dashboard',
+        [STORAGE_KEY_PAGE_BG_COLOR]: '#0d1117',
+        [STORAGE_KEY_CARD_BG_COLOR]: '#161b22',
+        [STORAGE_KEY_TEXT_PRIMARY_COLOR]: '#c9d1d9',
+        [STORAGE_KEY_ACCENT_SECONDARY_COLOR]: '#3fb950',
+        [STORAGE_KEY_SEARCH_NEW_TAB]: true,
+        [STORAGE_KEY_SHOW_DRAG_DROP_HINT]: true,
+        [STORAGE_KEY_SEARXNG_INSTANCE_URL]: '', 
+    };
+    
+    const SEARXNG_DEFAULT_PLACEHOLDER = "e.g., https://searx.example.com"; 
+
+    const COLOR_PRESETS = {
+        defaultDark: {
+            [STORAGE_KEY_PAGE_BG_COLOR]: '#0d1117', [STORAGE_KEY_CARD_BG_COLOR]: '#161b22', [STORAGE_KEY_TEXT_PRIMARY_COLOR]: '#c9d1d9',
+            [STORAGE_KEY_ACCENT_COLOR]: '#58a6ff', [STORAGE_KEY_ACCENT_SECONDARY_COLOR]: '#3fb950',
+        },
+        // Nordic Light removed
+        oceanicBlue: {
+            [STORAGE_KEY_PAGE_BG_COLOR]: '#0f2027', [STORAGE_KEY_CARD_BG_COLOR]: '#203a43', [STORAGE_KEY_TEXT_PRIMARY_COLOR]: '#e0e0e0',
+            [STORAGE_KEY_ACCENT_COLOR]: '#2c5364', [STORAGE_KEY_ACCENT_SECONDARY_COLOR]: '#1488cc',
+        },
+        forestGreen: {
+            [STORAGE_KEY_PAGE_BG_COLOR]: '#1a2a24', [STORAGE_KEY_CARD_BG_COLOR]: '#2d4239', [STORAGE_KEY_TEXT_PRIMARY_COLOR]: '#d8d8c0',
+            [STORAGE_KEY_ACCENT_COLOR]: '#52796f', [STORAGE_KEY_ACCENT_SECONDARY_COLOR]: '#84a98c',
+        },
+        monochromeDark: {
+            [STORAGE_KEY_PAGE_BG_COLOR]: '#121212', [STORAGE_KEY_CARD_BG_COLOR]: '#1e1e1e', [STORAGE_KEY_TEXT_PRIMARY_COLOR]: '#e0e0e0',
+            [STORAGE_KEY_ACCENT_COLOR]: '#bb86fc', [STORAGE_KEY_ACCENT_SECONDARY_COLOR]: '#03dac6',
+        }
     };
 
     // --- UTILITY FUNCTIONS ---
-    const getFaviconUrl = (url) => {
+    const getFaviconUrl = (url) => { /* ... (no changes) ... */ 
         try {
             const urlObj = new URL(url);
             return `https://t0.gstatic.com/faviconV2?client=SOCIAL&type=FAVICON&fallback_opts=TYPE,SIZE,URL&url=${urlObj.origin}&size=32`;
@@ -45,23 +82,29 @@ document.addEventListener('DOMContentLoaded', () => {
             return 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23888888"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zM11 7h2v6h-2V7zm0 8h2v2h-2v-2z"/></svg>';
         }
     };
-    const isValidHttpUrl = (string) => {
+    const isValidHttpUrl = (string) => { /* ... (no changes) ... */ 
         let url; try { url = new URL(string); } catch (_) { return false; }
         return url.protocol === "http:" || url.protocol === "https:";
     };
-    const saveToLocalStorage = (key, data) => { try { localStorage.setItem(key, JSON.stringify(data)); } catch (e) { console.error("Error saving to LS:", e); } };
-    const loadFromLocalStorage = (key) => {
+    const saveToLocalStorage = (key, data) => { /* ... (no changes) ... */ 
+        try { localStorage.setItem(key, JSON.stringify(data)); } catch (e) { console.error("Error saving to LS:", e); } 
+    };
+    const loadFromLocalStorage = (key) => { /* ... (no changes) ... */ 
         try {
             const item = localStorage.getItem(key);
-            return item ? JSON.parse(item) : DEFAULT_SETTINGS[key];
-        } catch (e) { console.error("Error loading from LS:", e); return DEFAULT_SETTINGS[key]; }
+            return item === null ? DEFAULT_SETTINGS[key] : JSON.parse(item);
+        } catch (e) { 
+            console.error(`Error loading ${key} from LS:`, e); 
+            return DEFAULT_SETTINGS[key]; 
+        }
     };
-    function hexToRgb(hex) {
+    function hexToRgb(hex) { /* ... (no changes) ... */ 
         const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
         return result ? [parseInt(result[1], 16), parseInt(result[2], 16), parseInt(result[3], 16)] : null;
     }
-    function lightenColor(hex, percent) {
+    function lightenColor(hex, percent) { /* ... (no changes) ... */ 
         hex = hex.replace(/^#/, '');
+        if(hex.length === 3) hex = hex.split('').map(c => c + c).join('');
         const num = parseInt(hex, 16), amt = Math.round(2.55 * percent),
               R = (num >> 16) + amt, G = (num >> 8 & 0x00FF) + amt, B = (num & 0x0000FF) + amt;
         const newHex = (0x1000000 + (R<255?R<1?0:R:255)*0x10000 + (G<255?G<1?0:G:255)*0x100 + (B<255?B<1?0:B:255)).toString(16).slice(1);
@@ -69,7 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- CLOCK WIDGET ---
-    function updateClock() {
+    function updateClock() { /* ... (no changes) ... */ 
         if (!clockTime || !clockDate || !DEFAULT_SETTINGS[STORAGE_KEY_SHOW_CLOCK]) return;
         const now = new Date();
         const format12h = DEFAULT_SETTINGS[STORAGE_KEY_CLOCK_TIME_FORMAT] === '12h';
@@ -78,46 +121,59 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- SEARCH FUNCTIONALITY ---
-    const performSearch = () => { /* ... (no changes, kept for brevity) ... */ 
+    const performSearch = () => { 
         if (!searchInput || !searchEngineSelect) return;
         const query = searchInput.value.trim();
         if (!query) return;
         const engine = searchEngineSelect.value;
         let url;
-        switch (engine) {
-            case 'google': url = `https://www.google.com/search?q=${encodeURIComponent(query)}`; break;
-            case 'duckduckgo': url = `https://duckduckgo.com/?q=${encodeURIComponent(query)}`; break;
-            case 'searxng': url = `https://searx.be/search?q=${encodeURIComponent(query)}`; break;
-            case 'brave': url = `https://search.brave.com/search?q=${encodeURIComponent(query)}`; break;
-            case 'startpage': url = `https://www.startpage.com/do/search?q=${encodeURIComponent(query)}`; break;
-            case 'qwant': url = `https://www.qwant.com/?q=${encodeURIComponent(query)}`; break;
-            case 'ecosia': url = `https://www.ecosia.org/search?q=${encodeURIComponent(query)}`; break;
-            case 'swisscows': url = `https://swisscows.com/web?query=${encodeURIComponent(query)}`; break;
-            case 'metager': url = `https://metager.org/meta/meta.ger3?eingabe=${encodeURIComponent(query)}`; break;
-            case 'mojeek': url = `https://www.mojeek.com/search?q=${encodeURIComponent(query)}`; break;
-            case 'wolfram': url = `https://www.wolframalpha.com/input/?i=${encodeURIComponent(query)}`; break;
-            case 'wikipedia': url = `https://ru.wikipedia.org/wiki/Special:Search?search=${encodeURIComponent(query)}`; break;
-            case 'youtube': url = `https://www.youtube.com/results?search_query=${encodeURIComponent(query)}`; break;
-            case 'github': url = `https://github.com/search?q=${encodeURIComponent(query)}`; break;
-            case 'stackoverflow': url = `https://stackoverflow.com/search?q=${encodeURIComponent(query)}`; break;
-            case 'reddit': url = `https://www.reddit.com/search/?q=${encodeURIComponent(query)}`; break;
-            case 'npm': url = `https://www.npmjs.com/search?q=${encodeURIComponent(query)}`; break;
-            case 'archiveorg': url = `https://archive.org/search.php?query=${encodeURIComponent(query)}`; break;
-            case 'openverse': url = `https://openverse.org/search/?q=${encodeURIComponent(query)}`; break;
-            case 'unsplash': url = `https://unsplash.com/s/photos/${encodeURIComponent(query)}`; break;
-            case 'yandex': url = `https://yandex.ru/search/?text=${encodeURIComponent(query)}`; break;
-            case 'bing': url = `https://www.bing.com/search?q=${encodeURIComponent(query)}`; break;
-            default: url = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
+        
+        if (engine === 'searxng') {
+            const instanceUrl = (DEFAULT_SETTINGS[STORAGE_KEY_SEARXNG_INSTANCE_URL] || "").trim();
+            if (!instanceUrl || !isValidHttpUrl(instanceUrl) || instanceUrl === SEARXNG_DEFAULT_PLACEHOLDER) {
+                alert("SearXNG instance URL is not set or invalid. Please set a valid instance URL in Settings -> Search (e.g., https://your.searx.instance.com). You can find instances on searx.space.");
+                return;
+            }
+            const baseUrl = instanceUrl.endsWith('/') ? instanceUrl.slice(0, -1) : instanceUrl;
+            url = `${baseUrl}/search?q=${encodeURIComponent(query)}`;
+        } else {
+            // Switch for other engines (no changes here, kept for brevity)
+            switch (engine) {
+                case 'google': url = `https://www.google.com/search?q=${encodeURIComponent(query)}`; break;
+                case 'duckduckgo': url = `https://duckduckgo.com/?q=${encodeURIComponent(query)}`; break;
+                case 'brave': url = `https://search.brave.com/search?q=${encodeURIComponent(query)}`; break;
+                case 'startpage': url = `https://www.startpage.com/do/search?q=${encodeURIComponent(query)}`; break;
+                case 'qwant': url = `https://www.qwant.com/?q=${encodeURIComponent(query)}`; break;
+                case 'ecosia': url = `https://www.ecosia.org/search?q=${encodeURIComponent(query)}`; break;
+                case 'swisscows': url = `https://swisscows.com/web?query=${encodeURIComponent(query)}`; break;
+                case 'metager': url = `https://metager.org/meta/meta.ger3?eingabe=${encodeURIComponent(query)}`; break;
+                case 'mojeek': url = `https://www.mojeek.com/search?q=${encodeURIComponent(query)}`; break;
+                case 'wolfram': url = `https://www.wolframalpha.com/input/?i=${encodeURIComponent(query)}`; break;
+                case 'wikipedia': url = `https://ru.wikipedia.org/wiki/Special:Search?search=${encodeURIComponent(query)}`; break;
+                case 'youtube': url = `https://www.youtube.com/results?search_query=${encodeURIComponent(query)}`; break;
+                case 'github': url = `https://github.com/search?q=${encodeURIComponent(query)}`; break;
+                case 'stackoverflow': url = `https://stackoverflow.com/search?q=${encodeURIComponent(query)}`; break;
+                case 'reddit': url = `https://www.reddit.com/search/?q=${encodeURIComponent(query)}`; break;
+                case 'npm': url = `https://www.npmjs.com/search?q=${encodeURIComponent(query)}`; break;
+                case 'archiveorg': url = `https://archive.org/search.php?query=${encodeURIComponent(query)}`; break;
+                case 'openverse': url = `https://openverse.org/search/?q=${encodeURIComponent(query)}`; break;
+                case 'unsplash': url = `https://unsplash.com/s/photos/${encodeURIComponent(query)}`; break;
+                case 'yandex': url = `https://yandex.ru/search/?text=${encodeURIComponent(query)}`; break;
+                case 'bing': url = `https://www.bing.com/search?q=${encodeURIComponent(query)}`; break;
+                default: url = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
+            }
         }
-        window.open(url, '_blank');
-        // searchInput.value = ''; // User might want to keep it
+        const openInNewTab = DEFAULT_SETTINGS[STORAGE_KEY_SEARCH_NEW_TAB];
+        window.open(url, openInNewTab ? '_blank' : '_self');
     };
 
 
     // --- BOOKMARKS FUNCTIONALITY ---
-    const toggleNoBookmarksMessage = () => {
+    const toggleHintsAndMessages = () => { /* ... (no changes) ... */ 
         if (noBookmarksMessage) noBookmarksMessage.style.display = bookmarks.length === 0 ? 'block' : 'none';
-        if (dragDropHintText) dragDropHintText.style.display = 'block'; // Always show hint or based on a setting
+        if (dragDropHintText) {
+            dragDropHintText.style.setProperty('--drag-drop-hint-display', DEFAULT_SETTINGS[STORAGE_KEY_SHOW_DRAG_DROP_HINT] ? 'block' : 'none');
+        }
     };
     const createBookmarkElement = (bookmark) => { /* ... (no changes) ... */ 
         const a = document.createElement('a');
@@ -131,7 +187,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const img = document.createElement('img');
         img.src = getFaviconUrl(bookmark.url);
-        img.alt = ''; // Decorative
+        img.alt = ''; 
         img.className = 'favicon';
         img.onerror = function() { this.src = getFaviconUrl('invalid-url'); };
 
@@ -143,13 +199,13 @@ document.addEventListener('DOMContentLoaded', () => {
         a.appendChild(nameSpan);
         return a;
     };
-    const renderBookmarks = () => {
+    const renderBookmarks = () => { /* ... (no changes) ... */ 
         if (!bookmarksContainer) return;
         bookmarksContainer.innerHTML = '';
         bookmarks.forEach(bm => bookmarksContainer.appendChild(createBookmarkElement(bm)));
-        toggleNoBookmarksMessage();
+        toggleHintsAndMessages(); 
     };
-    const renderManageBookmarksList = () => { /* ... (no changes) ... */
+    const renderManageBookmarksList = () => { /* ... (no changes) ... */ 
         if (!manageBookmarksList) return;
         manageBookmarksList.innerHTML = '';
         bookmarks.forEach((bookmark, index) => {
@@ -171,7 +227,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             deleteBtn.addEventListener('click', () => {
                 bookmarks.splice(index, 1);
-                saveBookmarks();
+                saveBookmarks(); 
                 renderAllBookmarks();
             });
 
@@ -182,11 +238,14 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     const renderAllBookmarks = () => { renderBookmarks(); renderManageBookmarksList(); };
     const saveBookmarks = () => saveToLocalStorage(STORAGE_KEY_BOOKMARKS, bookmarks);
-    const addSingleBookmark = (name, url, skipSaveAndRender = false) => {
+    const addSingleBookmark = (name, url, skipSaveAndRender = false) => { /* ... (no changes) ... */ 
         if (!name || !url || !isValidHttpUrl(url)) return false;
         if (bookmarks.some(bm => bm.url.toLowerCase() === url.toLowerCase())) return false;
         bookmarks.push({ name, url });
-        if (!skipSaveAndRender) { saveBookmarks(); renderAllBookmarks(); }
+        if (!skipSaveAndRender) { 
+            saveBookmarks(); 
+            renderAllBookmarks(); 
+        }
         return true;
     };
     const loadBookmarks = () => { bookmarks = loadFromLocalStorage(STORAGE_KEY_BOOKMARKS); renderAllBookmarks(); };
@@ -210,12 +269,12 @@ document.addEventListener('DOMContentLoaded', () => {
         return found;
     };
     const parseDroppedUriList = (uriListString, plainTextString = "") => { /* ... (no changes) ... */ 
-        const urls = uriListString.split('\n').map(u => u.trim()).filter(u => u && !u.startsWith('#') && isValidHttpUrl(u));
+         const urls = uriListString.split('\n').map(u => u.trim()).filter(u => u && !u.startsWith('#') && isValidHttpUrl(u));
         const titles = plainTextString.split('\n').map(t => t.trim());
         const found = [];
         urls.forEach((url, i) => {
             let name = titles[i] || "";
-             if (isValidHttpUrl(titles[i])) name = ""; // if title is a URL, ignore it as name
+             if (isValidHttpUrl(titles[i])) name = ""; 
 
             if (!name) {
                  try { name = new URL(url).hostname.replace(/^www\./, '') || "Untitled"; } catch { name = "Untitled"; }
@@ -227,64 +286,133 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // --- SETTINGS MODAL ---
-    const openSettingsModal = () => { if (settingsModal) { settingsModal.style.display = 'block'; settingsModal.setAttribute('aria-hidden', 'false'); closeSettingsModalBtn?.focus(); renderManageBookmarksList(); } };
-    const closeSettingsModal = () => { if (settingsModal) { settingsModal.style.display = 'none'; settingsModal.setAttribute('aria-hidden', 'true'); } };
-
-    // --- SETTINGS APPLICATION FUNCTIONS ---
-    const applySetting = (key, value) => {
-        DEFAULT_SETTINGS[key] = value; // Update runtime default for current session
-        document.documentElement.style.setProperty(`--${key.replace(/_/g, '-')}-css`, value); // Generic for CSS vars if named consistently
+    const openSettingsModal = () => { /* ... (no changes) ... */ 
+        if (settingsModal) { 
+            settingsModal.style.display = 'block'; 
+            settingsModal.setAttribute('aria-hidden', 'false'); 
+            closeSettingsModalBtn?.focus(); 
+            renderManageBookmarksList(); 
+        } 
+    };
+    const closeSettingsModal = () => { /* ... (no changes) ... */ 
+        if (settingsModal) { 
+            settingsModal.style.display = 'none'; 
+            settingsModal.setAttribute('aria-hidden', 'true'); 
+        } 
     };
 
-    function applyFaviconSize(size) { document.documentElement.style.setProperty('--favicon-size', `${size}px`); }
-    function applyAccentColor(color) {
-        document.documentElement.style.setProperty('--accent-primary', color);
-        const rgb = hexToRgb(color);
-        if (rgb) {
-            document.documentElement.style.setProperty('--accent-primary-hover', lightenColor(color, 15)); // Lighten slightly less
-            document.documentElement.style.setProperty('--accent-primary-shadow', `rgba(${rgb.join(',')}, 0.3)`);
-            document.documentElement.style.setProperty('--accent-primary-bg-hover', `rgba(${rgb.join(',')}, 0.1)`);
-            document.documentElement.style.setProperty('--drag-over-bg', `rgba(${rgb.join(',')}, 0.1)`);
-            document.documentElement.style.setProperty('--drag-over-border-color', color);
+    // --- SETTINGS APPLICATION FUNCTIONS ---
+    function _applyColor(cssVar, colorValue, isPrimaryAccent = false) {
+        document.documentElement.style.setProperty(cssVar, colorValue);
+        if (isPrimaryAccent) { // Primary accent also updates derived colors
+            const rgb = hexToRgb(colorValue);
+            if (rgb) {
+                document.documentElement.style.setProperty('--accent-primary-hover', lightenColor(colorValue, 15));
+                document.documentElement.style.setProperty('--accent-primary-shadow', `rgba(${rgb.join(',')}, 0.3)`);
+                document.documentElement.style.setProperty('--accent-primary-bg-hover', `rgba(${rgb.join(',')}, 0.1)`);
+                document.documentElement.style.setProperty('--drag-over-bg', `rgba(${rgb.join(',')}, 0.1)`);
+                document.documentElement.style.setProperty('--drag-over-border-color', colorValue);
+            }
+        } else if (cssVar === '--accent-secondary') { // Secondary accent has its own hover
+             document.documentElement.style.setProperty('--accent-secondary-hover', lightenColor(colorValue, 15));
         }
     }
-    function applyFontFamily(font) { document.documentElement.style.setProperty('--app-font-family', font); }
-    function applyClockVisibility(show) {
-        DEFAULT_SETTINGS[STORAGE_KEY_SHOW_CLOCK] = show; // Update runtime value
+    function applyPageBackgroundColor(color) { _applyColor('--bg-primary', color); }
+    function applyCardBackgroundColor(color) { _applyColor('--bg-secondary', color); }
+    function applyPrimaryTextColor(color) { _applyColor('--text-primary', color); }
+    function applyPrimaryAccentColor(color) { _applyColor('--accent-primary', color, true); }
+    function applySecondaryAccentColor(color) { _applyColor('--accent-secondary', color); }
+    
+    function applyFaviconSize(size) { /* ... (no changes) ... */ document.documentElement.style.setProperty('--favicon-size', `${size}px`); }
+    function applyFontFamily(font) { /* ... (no changes) ... */ document.documentElement.style.setProperty('--app-font-family', font); }
+    function applyClockVisibility(show) { /* ... (no changes) ... */ 
+        DEFAULT_SETTINGS[STORAGE_KEY_SHOW_CLOCK] = show; 
         if (clockWidgetContainer) clockWidgetContainer.style.setProperty('--clock-widget-display', show ? 'flex' : 'none');
-        if (show) updateClock(); // Update immediately if shown
+        if (show) updateClock(); 
     }
-    function applyClockTimeFormat(format) { DEFAULT_SETTINGS[STORAGE_KEY_CLOCK_TIME_FORMAT] = format; updateClock(); }
-    function applyQuicklinkGridColumns(cols) {
+    function applyClockTimeFormat(format) { /* ... (no changes) ... */ 
+        DEFAULT_SETTINGS[STORAGE_KEY_CLOCK_TIME_FORMAT] = format; updateClock(); 
+    }
+    function applyQuicklinkGridColumns(cols) { /* ... (no changes) ... */ 
         const value = cols === 'auto-fill' ? 'repeat(auto-fill, minmax(180px, 1fr))' : `repeat(${cols}, 1fr)`;
         document.documentElement.style.setProperty('--quicklink-grid-columns', value);
     }
-    function applyBorderRadius(radius) { document.documentElement.style.setProperty('--border-radius', radius); }
-    function applyMainTitle(title) { if (mainTitleElement) mainTitleElement.textContent = title || DEFAULT_SETTINGS[STORAGE_KEY_MAIN_TITLE]; }
+    function applyBorderRadius(radius) { /* ... (no changes) ... */ 
+        document.documentElement.style.setProperty('--border-radius', radius); 
+    }
+    function applyMainTitle(title) { /* ... (no changes) ... */ 
+        if (mainTitleElement) mainTitleElement.textContent = title || DEFAULT_SETTINGS[STORAGE_KEY_MAIN_TITLE]; 
+    }
+    function applySearchNewTab(enabled) { /* ... (no changes) ... */ DEFAULT_SETTINGS[STORAGE_KEY_SEARCH_NEW_TAB] = enabled; }
+    function applyShowDragDropHint(show) {  /* ... (no changes) ... */ 
+        DEFAULT_SETTINGS[STORAGE_KEY_SHOW_DRAG_DROP_HINT] = show;
+        toggleHintsAndMessages(); 
+    }
+    function applySearxngInstanceUrl(url) { /* ... (no changes) ... */ DEFAULT_SETTINGS[STORAGE_KEY_SEARXNG_INSTANCE_URL] = url.trim(); }
+
+    function applyColorPreset(presetName) {
+        const preset = COLOR_PRESETS[presetName];
+        if (!preset) return;
+
+        const colorSettingsMap = {
+            [STORAGE_KEY_PAGE_BG_COLOR]: { input: pageBgColorInput, apply: applyPageBackgroundColor },
+            [STORAGE_KEY_CARD_BG_COLOR]: { input: cardBgColorInput, apply: applyCardBackgroundColor },
+            [STORAGE_KEY_TEXT_PRIMARY_COLOR]: { input: textPrimaryColorInput, apply: applyPrimaryTextColor },
+            [STORAGE_KEY_ACCENT_COLOR]: { input: accentColorInput, apply: applyPrimaryAccentColor }, // Primary Accent
+            [STORAGE_KEY_ACCENT_SECONDARY_COLOR]: { input: accentSecondaryColorInput, apply: applySecondaryAccentColor },
+        };
+
+        for (const key in preset) {
+            if (colorSettingsMap[key]) {
+                const { input, apply } = colorSettingsMap[key];
+                const value = preset[key];
+                if (input) input.value = value;
+                if (apply) apply(value);
+                saveToLocalStorage(key, value);
+                DEFAULT_SETTINGS[key] = value; // Update runtime default
+            }
+        }
+    }
+
 
     // --- LOAD & SAVE SETTINGS ---
     const loadAllSettings = () => {
-        // Order matters for dependencies (e.g. clock format before updateClock)
-        const settingsToLoad = [
+        const settingsConfig = [
             { key: STORAGE_KEY_FONT_FAMILY, applyFunc: applyFontFamily, element: fontFamilySelect },
-            { key: STORAGE_KEY_ACCENT_COLOR, applyFunc: applyAccentColor, element: accentColorInput },
-            { key: STORAGE_KEY_BORDER_RADIUS, applyFunc: applyBorderRadius, element: borderRadiusSelect },
             { key: STORAGE_KEY_MAIN_TITLE, applyFunc: applyMainTitle, element: mainTitleTextInput },
+            { key: STORAGE_KEY_BORDER_RADIUS, applyFunc: applyBorderRadius, element: borderRadiusSelect },
+            
+            { key: STORAGE_KEY_PAGE_BG_COLOR, applyFunc: applyPageBackgroundColor, element: pageBgColorInput },
+            { key: STORAGE_KEY_CARD_BG_COLOR, applyFunc: applyCardBackgroundColor, element: cardBgColorInput },
+            { key: STORAGE_KEY_TEXT_PRIMARY_COLOR, applyFunc: applyPrimaryTextColor, element: textPrimaryColorInput },
+            { key: STORAGE_KEY_ACCENT_COLOR, applyFunc: applyPrimaryAccentColor, element: accentColorInput },
+            { key: STORAGE_KEY_ACCENT_SECONDARY_COLOR, applyFunc: applySecondaryAccentColor, element: accentSecondaryColorInput },
+            
             { key: STORAGE_KEY_SHOW_CLOCK, applyFunc: applyClockVisibility, element: showClockToggle, type: 'checkbox' },
             { key: STORAGE_KEY_CLOCK_TIME_FORMAT, applyFunc: applyClockTimeFormat, element: clockTimeFormatSelect },
-            { key: STORAGE_KEY_SEARCH_ENGINE, applyFunc: (val) => { if(searchEngineSelect) searchEngineSelect.value = val; if(defaultSearchEngineSelect) defaultSearchEngineSelect.value = val; }, element: defaultSearchEngineSelect },
+            
+            { key: STORAGE_KEY_SEARCH_ENGINE, applyFunc: (val) => { if(searchEngineSelect) searchEngineSelect.value = val; if(defaultSearchEngineSelect) defaultSearchEngineSelect.value = val; DEFAULT_SETTINGS[STORAGE_KEY_SEARCH_ENGINE] = val; }, element: defaultSearchEngineSelect },
+            { key: STORAGE_KEY_SEARXNG_INSTANCE_URL, applyFunc: applySearxngInstanceUrl, element: searxngInstanceUrlInput},
+            { key: STORAGE_KEY_SEARCH_NEW_TAB, applyFunc: applySearchNewTab, element: searchNewTabToggle, type: 'checkbox'},
+            
             { key: STORAGE_KEY_QUICKLINK_ICON_SIZE, applyFunc: applyFaviconSize, element: quickLinkIconSizeSelect },
             { key: STORAGE_KEY_QL_GRID_COLUMNS, applyFunc: applyQuicklinkGridColumns, element: quicklinkGridColumnsSelect },
+            { key: STORAGE_KEY_SHOW_DRAG_DROP_HINT, applyFunc: applyShowDragDropHint, element: showDragDropHintToggle, type: 'checkbox'},
         ];
 
-        settingsToLoad.forEach(s => {
+        settingsConfig.forEach(s => {
             const value = loadFromLocalStorage(s.key);
-            DEFAULT_SETTINGS[s.key] = value; // Ensure runtime defaults are up-to-date
+            DEFAULT_SETTINGS[s.key] = value; 
             if (s.element) {
                 if (s.type === 'checkbox') s.element.checked = value;
                 else s.element.value = value;
+
+                // Special handling for SearXNG placeholder if loaded value is empty
+                if (s.key === STORAGE_KEY_SEARXNG_INSTANCE_URL && !value) {
+                    s.element.placeholder = SEARXNG_DEFAULT_PLACEHOLDER;
+                }
             }
-            if (s.applyFunc) s.applyFunc(value);
+            if (s.applyFunc) s.applyFunc(value); 
         });
     };
 
@@ -292,8 +420,12 @@ document.addEventListener('DOMContentLoaded', () => {
         return (event) => {
             const value = isCheckbox ? event.target.checked : event.target.value;
             saveToLocalStorage(key, value);
-            DEFAULT_SETTINGS[key] = value; // Update runtime for immediate effect
+            DEFAULT_SETTINGS[key] = value; 
             if (applyFunc) applyFunc(value);
+             // Update placeholder for SearXNG if it becomes empty after a change
+            if (key === STORAGE_KEY_SEARXNG_INSTANCE_URL && searxngInstanceUrlInput) {
+                searxngInstanceUrlInput.placeholder = value ? "" : SEARXNG_DEFAULT_PLACEHOLDER;
+            }
         };
     };
     
@@ -319,7 +451,7 @@ document.addEventListener('DOMContentLoaded', () => {
         clockWidgetContainer = document.getElementById('clock-widget-container');
         quickLinksDropzone = document.getElementById('quick-links-dropzone');
         dragDropHintText = document.getElementById('drag-drop-hint-text');
-        // New settings elements
+        
         quickLinkIconSizeSelect = document.getElementById('quicklink-icon-size-select');
         accentColorInput = document.getElementById('accent-color-input');
         fontFamilySelect = document.getElementById('font-family-select');
@@ -329,14 +461,22 @@ document.addEventListener('DOMContentLoaded', () => {
         borderRadiusSelect = document.getElementById('border-radius-select');
         mainTitleTextInput = document.getElementById('main-title-text-input');
         mainTitleElement = document.getElementById('main-title-element');
-
-        // Initial Data Load & UI Update
-        loadAllSettings(); // Load all settings first
-        loadBookmarks();   // Load bookmarks
         
-        updateClock(); // Initial clock update based on loaded settings
-        const clockIntervalSetting = DEFAULT_SETTINGS[STORAGE_KEY_SHOW_CLOCK];
-        if(clockIntervalSetting) setInterval(updateClock, 30000);
+        pageBgColorInput = document.getElementById('page-bg-color-input');
+        cardBgColorInput = document.getElementById('card-bg-color-input');
+        textPrimaryColorInput = document.getElementById('text-primary-color-input');
+        accentSecondaryColorInput = document.getElementById('accent-secondary-color-input');
+        searchNewTabToggle = document.getElementById('search-new-tab-toggle');
+        showDragDropHintToggle = document.getElementById('show-drag-drop-hint-toggle');
+        searxngInstanceUrlInput = document.getElementById('searxng-instance-url-input');
+        presetButtonContainer = document.querySelector('.preset-buttons');
+
+
+        loadAllSettings(); 
+        loadBookmarks();   
+        
+        updateClock(); 
+        if(DEFAULT_SETTINGS[STORAGE_KEY_SHOW_CLOCK]) setInterval(updateClock, 30000);
 
 
         // Event Listeners
@@ -366,9 +506,10 @@ document.addEventListener('DOMContentLoaded', () => {
         window.addEventListener('keydown', (e) => { if (settingsModal && settingsModal.style.display === 'block' && e.key === 'Escape') closeSettingsModal(); });
 
         // Settings Event Listeners
-        if (defaultSearchEngineSelect) defaultSearchEngineSelect.addEventListener('change', createSaveSettingHandler(STORAGE_KEY_SEARCH_ENGINE, (val) => { if(searchEngineSelect) searchEngineSelect.value = val; }));
+        if (defaultSearchEngineSelect) defaultSearchEngineSelect.addEventListener('change', createSaveSettingHandler(STORAGE_KEY_SEARCH_ENGINE, (val) => { if(searchEngineSelect) searchEngineSelect.value = val; DEFAULT_SETTINGS[STORAGE_KEY_SEARCH_ENGINE] = val; }));
         if (quickLinkIconSizeSelect) quickLinkIconSizeSelect.addEventListener('change', createSaveSettingHandler(STORAGE_KEY_QUICKLINK_ICON_SIZE, applyFaviconSize));
-        if (accentColorInput) accentColorInput.addEventListener('input', createSaveSettingHandler(STORAGE_KEY_ACCENT_COLOR, applyAccentColor));
+        
+        if (accentColorInput) accentColorInput.addEventListener('input', createSaveSettingHandler(STORAGE_KEY_ACCENT_COLOR, applyPrimaryAccentColor));
         if (fontFamilySelect) fontFamilySelect.addEventListener('change', createSaveSettingHandler(STORAGE_KEY_FONT_FAMILY, applyFontFamily));
         if (showClockToggle) showClockToggle.addEventListener('change', createSaveSettingHandler(STORAGE_KEY_SHOW_CLOCK, applyClockVisibility, true));
         if (clockTimeFormatSelect) clockTimeFormatSelect.addEventListener('change', createSaveSettingHandler(STORAGE_KEY_CLOCK_TIME_FORMAT, applyClockTimeFormat));
@@ -376,8 +517,27 @@ document.addEventListener('DOMContentLoaded', () => {
         if (borderRadiusSelect) borderRadiusSelect.addEventListener('change', createSaveSettingHandler(STORAGE_KEY_BORDER_RADIUS, applyBorderRadius));
         if (mainTitleTextInput) mainTitleTextInput.addEventListener('input', createSaveSettingHandler(STORAGE_KEY_MAIN_TITLE, applyMainTitle));
         
+        if (pageBgColorInput) pageBgColorInput.addEventListener('input', createSaveSettingHandler(STORAGE_KEY_PAGE_BG_COLOR, applyPageBackgroundColor));
+        if (cardBgColorInput) cardBgColorInput.addEventListener('input', createSaveSettingHandler(STORAGE_KEY_CARD_BG_COLOR, applyCardBackgroundColor));
+        if (textPrimaryColorInput) textPrimaryColorInput.addEventListener('input', createSaveSettingHandler(STORAGE_KEY_TEXT_PRIMARY_COLOR, applyPrimaryTextColor));
+        if (accentSecondaryColorInput) accentSecondaryColorInput.addEventListener('input', createSaveSettingHandler(STORAGE_KEY_ACCENT_SECONDARY_COLOR, applySecondaryAccentColor));
+        if (searchNewTabToggle) searchNewTabToggle.addEventListener('change', createSaveSettingHandler(STORAGE_KEY_SEARCH_NEW_TAB, applySearchNewTab, true));
+        if (showDragDropHintToggle) showDragDropHintToggle.addEventListener('change', createSaveSettingHandler(STORAGE_KEY_SHOW_DRAG_DROP_HINT, applyShowDragDropHint, true));
+        if (searxngInstanceUrlInput) searxngInstanceUrlInput.addEventListener('change', createSaveSettingHandler(STORAGE_KEY_SEARXNG_INSTANCE_URL, applySearxngInstanceUrl));
 
-        if (quickLinksDropzone) { /* ... (no changes to drop logic itself) ... */
+        if (presetButtonContainer) {
+            presetButtonContainer.addEventListener('click', (e) => {
+                if (e.target.classList.contains('preset-btn')) {
+                    const presetName = e.target.dataset.preset;
+                    if (presetName) {
+                        applyColorPreset(presetName);
+                    }
+                }
+            });
+        }
+        
+
+        if (quickLinksDropzone) { /* ... (Drop logic, no changes needed here for brevity) ... */
             const originalHintText = dragDropHintText ? dragDropHintText.textContent : "Drag & drop web links or selected bookmarks here!";
             
             quickLinksDropzone.addEventListener('dragenter', (e) => {
@@ -444,16 +604,19 @@ document.addEventListener('DOMContentLoaded', () => {
                     let addedCount = 0;
                     processedBookmarks.forEach(bm => {
                         if (bm && typeof bm.name === 'string' && typeof bm.url === 'string' && isValidHttpUrl(bm.url)) {
-                            if (addSingleBookmark(bm.name, bm.url, true)) addedCount++;
+                            if (addSingleBookmark(bm.name, bm.url, true)) addedCount++; 
                         }
                     });
-                    if (addedCount > 0) { saveBookmarks(); renderAllBookmarks(); }
+                    if (addedCount > 0) { 
+                        saveBookmarks(); 
+                        renderAllBookmarks(); 
+                    }
                 } else {
                     console.warn("Could not extract any valid link(s) from the dropped item.");
                 }
             });
-        }
-    } // end of initializeApp
+        } 
+    } 
 
     initializeApp();
 });

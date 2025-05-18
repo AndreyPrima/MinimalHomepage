@@ -1,28 +1,34 @@
 :root {
     --app-font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    --bg-primary: #0d1117;
-    --bg-secondary: #161b22;
-    --bg-tertiary: #21262d;
-    --text-primary: #c9d1d9;
-    --text-secondary: #8b949e;
-    --text-placeholder: #626c77;
-    --accent-primary: #58a6ff;
-    --accent-secondary: #3fb950;
-    --accent-primary-hover: #79c0ff;
-    --accent-secondary-hover: #56d364;
-    --accent-primary-shadow: rgba(88, 166, 255, 0.3);
-    --accent-primary-bg-hover: rgba(88, 166, 255, 0.1);
-    --border-color: #30363d;
-    --border-radius: 6px; /* Default, will be configurable */
+    --bg-primary: #0d1117; 
+    --bg-secondary: #161b22; 
+    --bg-tertiary: #21262d; 
+    --text-primary: #c9d1d9; 
+    --text-secondary: #8b949e; 
+    --text-placeholder: #626c77; 
+    
+    --accent-primary: #58a6ff; 
+    --accent-primary-hover: #79c0ff; 
+    --accent-primary-shadow: rgba(88, 166, 255, 0.3); 
+    --accent-primary-bg-hover: rgba(88, 166, 255, 0.1); 
+    
+    --accent-secondary: #3fb950; 
+    --accent-secondary-hover: #56d364; 
+
+    --border-color: #30363d; 
+    --border-radius: 6px; 
     --card-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
     --input-shadow: none;
-    --success-color: #3fb950;
-    --danger-color: #f85149;
-    --drag-over-bg: rgba(88, 166, 255, 0.1);
-    --drag-over-border-color: var(--accent-primary);
-    --favicon-size: 18px;
-    --clock-widget-display: flex; /* Default, configurable */
-    --quicklink-grid-columns: repeat(auto-fill, minmax(180px, 1fr)); /* Default, configurable */
+    --success-color: var(--accent-secondary); 
+    --danger-color: #f85149; 
+    
+    --drag-over-bg: rgba(88, 166, 255, 0.1); 
+    --drag-over-border-color: var(--accent-primary); 
+    
+    --favicon-size: 18px; 
+    --clock-widget-display: flex; 
+    --quicklink-grid-columns: repeat(auto-fill, minmax(180px, 1fr)); 
+    --drag-drop-hint-display: block; 
 }
 
 * {
@@ -52,24 +58,23 @@ body {
 h1, h2, h3, h4 {
     margin-bottom: 0.8em;
     font-weight: 500;
+    color: var(--text-primary); 
 }
 
 h1.main-title {
     font-size: 2.2em;
-    color: var(--text-primary);
     text-align: center;
     font-weight: 700;
     letter-spacing: 1px;
 }
 
 a {
-    color: var(--accent-secondary);
+    color: var(--accent-primary); 
     text-decoration: none;
     transition: color 0.2s;
 }
-
 a:hover {
-    color: var(--accent-secondary-hover);
+    color: var(--accent-primary-hover); 
 }
 
 input, select, button, textarea {
@@ -82,25 +87,53 @@ input, select, button, textarea {
     padding: 10px 15px;
     transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s, color 0.2s, border-radius 0.2s;
 }
+
 input[type="color"] {
-    padding: 5px;
-    min-height: 40px;
-    width: 100%; /* Make color picker take full width in settings */
+    -webkit-appearance: none; /* Remove default appearance */
+    -moz-appearance: none;
+    appearance: none;
+    width: 100%; 
+    height: 38px; /* Consistent height with other inputs */
+    padding: 0; /* Remove padding that might interfere with swatch */
+    border: 1px solid var(--border-color);
+    background-color: var(--bg-tertiary); 
+    border-radius: var(--border-radius); 
+    cursor: pointer;
+    overflow: hidden; /* Clip the swatch if it overflows */
 }
+/* Styling the color swatch itself */
+input[type="color"]::-webkit-color-swatch-wrapper {
+    padding: 3px; /* Padding around the swatch */
+}
+input[type="color"]::-webkit-color-swatch {
+     border: none;
+     /* Make swatch slightly smaller than the input's border-radius */
+     border-radius: calc(var(--border-radius) - 3px); 
+}
+input[type="color"]::-moz-color-swatch { /* Firefox */
+    border: none;
+    border-radius: calc(var(--border-radius) - 3px);
+    /* Firefox might need explicit sizing for the swatch if it doesn't fill */
+    width: calc(100% - 6px);
+    height: calc(100% - 6px);
+    margin: 3px;
+}
+
 
 input::placeholder, textarea::placeholder {
     color: var(--text-placeholder);
 }
 
-input:focus, select:focus, textarea:focus {
+input:not([type="color"]):focus, select:focus, textarea:focus {
     outline: none;
     border-color: var(--accent-primary);
     box-shadow: 0 0 0 3px var(--accent-primary-shadow);
 }
 
+
 button {
     cursor: pointer;
-    border-radius: var(--border-radius); /* Ensure buttons also use global radius */
+    border-radius: var(--border-radius);
 }
 
 .icon-btn {
@@ -109,7 +142,7 @@ button {
     color: var(--text-secondary);
     font-size: 1.5em;
     padding: 8px;
-    border-radius: 50%; /* Keep icon buttons circular unless specified */
+    border-radius: 50%; 
     transition: color 0.2s, background-color 0.2s;
     width: 40px;
     height: 40px;
@@ -132,7 +165,7 @@ button {
     color: var(--bg-primary);
     border: none;
     padding: 10px 20px;
-    transition: background-color 0.2s;
+    transition: background-color 0.2s, color 0.2s; 
     display: inline-flex;
     align-items: center;
     gap: 8px;
@@ -158,7 +191,7 @@ button {
     margin-bottom: 25px;
     box-shadow: var(--card-shadow);
     border: 1px solid var(--border-color);
-    transition: border-radius 0.2s;
+    transition: border-radius 0.2s, background-color 0.3s;
 }
 
 .card-header {
@@ -172,7 +205,6 @@ button {
 .card-header h2 {
     margin-bottom: 0;
     font-size: 1.4em;
-    color: var(--text-primary);
 }
 
 header {
@@ -187,8 +219,8 @@ header {
     text-align: center;
 }
 .clock-widget-container{
-    min-width: 120px; /* Ensure space even if clock is hidden initially */
-    display: var(--clock-widget-display); /* Controlled by JS */
+    min-width: 120px; 
+    display: var(--clock-widget-display);
     justify-content: flex-start;
 }
 .clock-widget {
@@ -200,6 +232,7 @@ header {
     font-size: 1.4em;
     font-weight: 500;
     display: block;
+    color: var(--text-primary); 
 }
 .clock-widget #date {
     font-size: 0.9em;
@@ -248,19 +281,19 @@ header {
     font-size: 0.8em;
 }
 .search-submit-btn {
-    background-color: var(--accent-secondary);
-    color: var(--bg-primary);
+    background-color: var(--accent-secondary); 
+    color: var(--bg-primary); 
     border: none;
     padding: 10px;
-    width: 42px; /* Fixed width */
-    height: 42px; /* Fixed height for square button */
+    width: 42px; 
+    height: 42px; 
     display: inline-flex;
     justify-content: center;
     align-items: center;
     transition: background-color 0.2s;
 }
 .search-submit-btn:hover {
-    background-color: var(--accent-secondary-hover);
+    background-color: var(--accent-secondary-hover); 
 }
 .search-submit-btn i {
     font-size: 1.1em;
@@ -288,13 +321,13 @@ header {
 .bookmark-item:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    background-color: #2f353c;
+    background-color: var(--border-color); 
     border-color: var(--accent-primary);
 }
 .bookmark-item img.favicon {
     width: var(--favicon-size);
     height: var(--favicon-size);
-    border-radius: 3px; /* Keep favicon radius small */
+    border-radius: 3px; 
     object-fit: contain;
     background-color: rgba(255,255,255,0.05);
     flex-shrink: 0;
@@ -322,6 +355,7 @@ header {
     border-top: 1px dashed var(--border-color);
     padding-top: 12px;
     transition: color 0.2s;
+    display: var(--drag-drop-hint-display); 
 }
 
 .quick-links-section.drag-over-active {
@@ -355,17 +389,17 @@ header {
 
 .modal-content {
     background-color: var(--bg-secondary);
-    margin: 5% auto; /* Reduced top margin */
+    margin: 5% auto; 
     padding: 30px;
     border-radius: var(--border-radius);
     width: 90%;
     max-width: 700px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     animation: slideIn 0.3s ease-out;
-    max-height: 85vh; /* Increased max height */
+    max-height: 85vh; 
     display: flex;
     flex-direction: column;
-    transition: border-radius 0.2s;
+    transition: border-radius 0.2s, background-color 0.3s;
 }
 @keyframes slideIn { from { transform: translateY(-50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
@@ -380,7 +414,6 @@ header {
 .modal-header h2 {
     margin: 0;
     font-size: 1.6em;
-    color: var(--text-primary);
     display: flex;
     align-items: center;
     gap: 10px;
@@ -404,13 +437,13 @@ header {
 }
 .settings-category h3 {
     font-size: 1.2em;
-    color: var(--accent-secondary);
+    color: var(--accent-secondary); 
     margin-bottom: 15px;
     display: flex;
     align-items: center;
     gap: 8px;
 }
-.settings-category label {
+.settings-category label:not(.toggle-switch-label) { 
     display: block;
     margin-bottom: 6px;
     font-weight: 500;
@@ -422,19 +455,76 @@ header {
 .settings-category select {
     width: 100%;
     margin-bottom: 12px;
-    padding: 8px 12px; /* Standardized padding */
+    padding: 8px 12px; 
 }
-/* Toggle Switch Styles */
+.settings-note {
+    font-size: 0.85em;
+    color: var(--text-secondary);
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+.settings-note a {
+    color: var(--accent-primary);
+}
+.settings-note a:hover {
+    text-decoration: underline;
+}
+
+
+/* Color Presets Styling */
+.color-presets-container {
+    margin-bottom: 20px;
+}
+.color-presets-container label {
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    font-size: 0.9em;
+}
+.preset-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+.preset-btn {
+    padding: 8px 12px;
+    font-size: 0.85em;
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    transition: background-color 0.2s, border-color 0.2s;
+}
+.preset-btn:hover {
+    background-color: var(--border-color);
+    border-color: var(--accent-primary);
+}
+
+.color-picker-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    align-items: end; /* Align items to the bottom for consistent label-input alignment */
+}
+.color-picker-grid > div { 
+    display: flex;
+    flex-direction: column;
+}
+.color-picker-grid label {
+    margin-bottom: 4px;
+}
+
+
 .toggle-switch-label {
     position: relative;
-    display: inline-flex; /* Changed to inline-flex */
-    align-items: center; /* Vertically align items */
-    gap: 10px; /* Space between text and switch */
+    display: inline-flex; 
+    align-items: center; 
+    gap: 10px; 
     margin-bottom: 12px;
     font-weight: 500;
     color: var(--text-secondary);
     font-size: 0.9em;
     cursor: pointer;
+    user-select: none; 
 }
 .toggle-switch {
     opacity: 0;
@@ -444,19 +534,19 @@ header {
 .slider {
     position: relative;
     cursor: pointer;
-    width: 40px; /* Width of the switch */
-    height: 22px; /* Height of the switch */
+    width: 40px; 
+    height: 22px; 
     background-color: var(--border-color);
     transition: .4s;
-    border-radius: 22px; /* Fully rounded */
+    border-radius: 22px; 
 }
 .slider:before {
     position: absolute;
     content: "";
-    height: 16px; /* Size of the circle */
+    height: 16px; 
     width: 16px;
-    left: 3px; /* Position from left */
-    bottom: 3px; /* Position from bottom */
+    left: 3px; 
+    bottom: 3px; 
     background-color: white;
     transition: .4s;
     border-radius: 50%;
@@ -464,11 +554,11 @@ header {
 input.toggle-switch:checked + .slider {
     background-color: var(--accent-primary);
 }
-input.toggle-switch:focus + .slider {
-    box-shadow: 0 0 1px var(--accent-primary);
+input.toggle-switch:focus-visible + .slider { 
+    box-shadow: 0 0 0 2px var(--bg-primary), 0 0 0 4px var(--accent-primary-shadow);
 }
 input.toggle-switch:checked + .slider:before {
-    transform: translateX(18px); /* How far the circle moves */
+    transform: translateX(18px); 
 }
 
 
@@ -492,7 +582,7 @@ input.toggle-switch:checked + .slider:before {
     align-items: center;
     padding: 8px 10px;
     background-color: var(--bg-tertiary);
-    border-radius: var(--border-radius); /* Use global radius */
+    border-radius: var(--border-radius); 
     margin-bottom: 8px;
     font-size: 0.95em;
     transition: border-radius 0.2s;
@@ -518,7 +608,7 @@ input.toggle-switch:checked + .slider:before {
     border-radius: 50%;
 }
 #manage-bookmarks-list .delete-bookmark-btn:hover {
-    color: var(--bg-primary);
+    color: var(--bg-primary); 
     background-color: var(--danger-color);
 }
 
@@ -550,12 +640,18 @@ input.toggle-switch:checked + .slider:before {
     #search-form { flex-direction: column; }
     .bookmarks-grid { grid-template-columns: var(--quicklink-grid-columns, repeat(auto-fill, minmax(150px, 1fr))); gap: 10px; }
     .modal-content { margin: 5% auto; width: 95%; padding: 20px; max-height: 90vh;}
+    .color-picker-grid { grid-template-columns: 1fr; } 
+    .preset-buttons { justify-content: center;}
 }
 @media (max-width: 480px) {
-    .bookmarks-grid { grid-template-columns: 1fr; } /* Force single column on very small screens if auto isn't enough */
+    .bookmarks-grid { 
+        grid-template-columns: 1fr !important; 
+    } 
     .bookmark-item { padding: 10px; }
     .clock-widget #time { font-size: 1.2em; }
     .clock-widget #date { font-size: 0.8em; }
     .settings-category h3 {font-size: 1.1em;}
     .modal-header h2 {font-size: 1.4em;}
+    .action-btn { padding: 8px 15px; font-size: 0.9em;}
+    .preset-btn { width: calc(50% - 4px); font-size: 0.8em; } 
 }
