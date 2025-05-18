@@ -1,111 +1,507 @@
-body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+:root {
+    --font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --bg-primary: #0d1117;
+    --bg-secondary: #161b22;
+    --bg-tertiary: #21262d;
+    --text-primary: #c9d1d9;
+    --text-secondary: #8b949e;
+    --text-placeholder: #626c77;
+    --accent-primary: #58a6ff;
+    --accent-secondary: #3fb950;
+    --accent-primary-hover: #79c0ff;
+    --accent-secondary-hover: #56d364;
+    --border-color: #30363d;
+    --border-radius: 6px;
+    --card-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    --input-shadow: none;
+    --success-color: #3fb950;
+    --danger-color: #f85149;
+    --drag-over-bg: rgba(88, 166, 255, 0.1);
+    --drag-over-border-color: var(--accent-primary);
+}
+
+* {
     margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-family);
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    line-height: 1.6;
     padding: 20px;
-    background-color: #fff;
-    color: #333;
+    transition: background-color 0.3s, color 0.3s;
+    min-height: 100vh;
     display: flex;
     justify-content: center;
-    min-height: 90vh; /* Чтобы контент был примерно по центру, если его мало */
+    align-items: flex-start;
 }
 
 .container {
     width: 100%;
-    max-width: 900px; /* Максимальная ширина контента */
+    max-width: 1000px;
+}
+
+h1, h2, h3, h4 {
+    margin-bottom: 0.8em;
+    font-weight: 500;
+}
+
+h1.main-title {
+    font-size: 2.2em;
+    color: var(--text-primary);
+    text-align: center;
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+a {
+    color: var(--accent-secondary);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+a:hover {
+    color: var(--accent-secondary-hover);
+}
+
+input, select, button, textarea {
+    font-family: inherit;
+    font-size: 1em;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--border-color);
+    background-color: var(--bg-tertiary);
+    color: var(--text-primary);
+    padding: 10px 15px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+input::placeholder, textarea::placeholder {
+    color: var(--text-placeholder);
+}
+
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.3); /* GitHub blue focus */
+}
+
+button {
+    cursor: pointer;
+}
+
+.icon-btn {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 1.5em;
+    padding: 8px;
+    border-radius: 50%;
+    transition: color 0.2s, background-color 0.2s;
+    width: 40px;
+    height: 40px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.icon-btn:hover {
+    color: var(--accent-primary);
+    background-color: rgba(88, 166, 255, 0.1);
+}
+.icon-btn.small-btn {
+    font-size: 1.1em;
+    width: 30px;
+    height: 30px;
+}
+
+.action-btn {
+    background-color: var(--accent-primary);
+    color: var(--bg-primary); /* Темный текст на светлой кнопке для контраста */
+    border: none;
+    padding: 10px 20px;
+    transition: background-color 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+}
+
+.action-btn:hover {
+    background-color: var(--accent-primary-hover);
+}
+.action-btn.secondary-btn {
+    background-color: var(--bg-tertiary);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+}
+.action-btn.secondary-btn:hover {
+    background-color: var(--border-color);
+    color: var(--text-primary);
+}
+
+.card {
+    background-color: var(--bg-secondary);
+    border-radius: var(--border-radius);
+    padding: 25px;
+    margin-bottom: 25px;
+    box-shadow: var(--card-shadow);
+    border: 1px solid var(--border-color);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 10px;
+}
+.card-header h2 {
+    margin-bottom: 0;
+    font-size: 1.4em;
+    color: var(--text-primary);
 }
 
 header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
+    padding: 15px 0;
+    margin-bottom: 30px;
 }
-
-header h1 {
-    font-size: 1.2em;
-    font-weight: normal;
-    margin: 0;
+.title-container {
+    flex-grow: 1;
+    text-align: center;
 }
-
-.settings {
+.clock-widget {
     font-size: 0.9em;
-    color: #555;
-    text-decoration: none;
-    display: flex;
-    align-items: center;
+    color: var(--text-secondary);
+    text-align: left;
+    min-width: 120px;
 }
-
-.settings-icon {
-    margin-left: 5px;
-    font-size: 1.4em; /* Размер символа круга */
-    line-height: 1;
+.clock-widget #time {
+    font-size: 1.4em;
+    font-weight: 500;
+    display: block;
 }
-/* Для SVG иконки можно использовать:
-.settings svg {
-    margin-left: 5px;
-} */
-
-
-.search-section, .quick-links-section {
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    padding: 20px;
-    margin-bottom: 20px;
+.clock-widget #date {
+    font-size: 0.9em;
 }
 
 #search-form {
     display: flex;
-    width: 100%;
+    gap: 10px;
 }
-
-#search-input {
+.search-input-wrapper {
     flex-grow: 1;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px 0 0 4px; /* Скругление левых углов */
-    font-size: 1em;
-    box-sizing: border-box; /* Чтобы padding не увеличивал общую ширину */
+    position: relative;
 }
-
-#search-engine {
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-left: none; /* Убрать левую границу, т.к. она есть у input */
-    border-radius: 0 4px 4px 0; /* Скругление правых углов */
-    background-color: #f9f9f9;
-    font-size: 1em;
-    cursor: pointer;
-}
-
-#search-input:focus, #search-engine:focus {
-    outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
-}
-
-.quick-links-section h2 {
-    font-size: 1em;
-    font-weight: normal;
-    margin-top: 0;
-    color: #777;
-}
-
-#bookmarks-container {
-    display: flex;
-    flex-wrap: wrap; /* Для переноса ссылок на новую строку */
-    gap: 10px; /* Отступы между ссылками */
-}
-
-.bookmark-link {
-    display: inline-block;
-    padding: 8px 12px;
-    background-color: #f0f0f0;
-    color: #333;
-    text-decoration: none;
-    border-radius: 4px;
+.search-icon {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-placeholder);
     font-size: 0.9em;
 }
+#search-input {
+    width: 100%;
+    padding-left: 40px;
+    box-shadow: var(--input-shadow);
+}
+.select-wrapper {
+    position: relative;
+}
+#search-engine {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    padding-right: 35px;
+    min-width: 150px;
+    background-color: var(--bg-tertiary);
+    cursor: pointer;
+}
+.select-arrow {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-secondary);
+    pointer-events: none;
+    font-size: 0.8em;
+}
+.search-submit-btn {
+    background-color: var(--accent-secondary);
+    color: var(--bg-primary);
+    border: none;
+    padding: 10px;
+    width: 42px;
+    height: 42px;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.2s;
+}
+.search-submit-btn:hover {
+    background-color: var(--accent-secondary-hover);
+}
+.search-submit-btn i {
+    font-size: 1.1em;
+}
 
-.bookmark-link:hover {
-    background-color: #e0e0e0;
+.bookmarks-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 12px;
+    min-height: 60px;
+}
+.bookmark-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background-color: var(--bg-tertiary);
+    padding: 10px 12px;
+    border-radius: var(--border-radius);
+    text-decoration: none;
+    color: var(--text-primary);
+    transition: transform 0.15s ease-out, box-shadow 0.15s ease-out, background-color 0.15s ease-out;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+}
+.bookmark-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    background-color: #2f353c;
+    border-color: var(--accent-primary);
+}
+.bookmark-item img.favicon {
+    width: 18px;
+    height: 18px;
+    border-radius: 3px;
+    object-fit: contain;
+    background-color: rgba(255,255,255,0.05);
+    flex-shrink: 0;
+}
+.bookmark-item .bookmark-name {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex-grow: 1;
+    font-size: 0.9em;
+}
+.no-bookmarks-message {
+    grid-column: 1 / -1;
+    text-align: center;
+    color: var(--text-secondary);
+    padding: 20px 10px;
+    font-size: 0.95em;
+}
+.drag-drop-hint {
+    text-align: center;
+    color: var(--text-placeholder);
+    font-size: 0.9em;
+    margin-top: 15px;
+    border-top: 1px dashed var(--border-color);
+    padding-top: 12px;
+    transition: color 0.2s;
+}
+
+.quick-links-section.drag-over-active {
+    background-color: var(--drag-over-bg);
+    border: 2px dashed var(--drag-over-border-color);
+    box-shadow: 0 0 15px var(--drag-over-bg);
+}
+.quick-links-section.drag-over-active .bookmarks-grid {
+    opacity: 0.7;
+    pointer-events: none;
+}
+.quick-links-section.drag-over-active .drag-drop-hint {
+    color: var(--accent-primary);
+    font-weight: 500;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(5px);
+    animation: fadeIn 0.3s ease-out;
+}
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.modal-content {
+    background-color: var(--bg-secondary);
+    margin: 8% auto;
+    padding: 30px;
+    border-radius: var(--border-radius);
+    width: 90%;
+    max-width: 700px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    animation: slideIn 0.3s ease-out;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+}
+@keyframes slideIn { from { transform: translateY(-50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+}
+.modal-header h2 {
+    margin: 0;
+    font-size: 1.6em;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.modal-header .close-btn { font-size: 1.2em; }
+
+.modal-body {
+    overflow-y: auto;
+    padding-right: 10px; /* Space for scrollbar */
+}
+
+.settings-category {
+    margin-bottom: 25px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border-color);
+}
+.settings-category:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+.settings-category h3 {
+    font-size: 1.2em;
+    color: var(--accent-secondary);
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.settings-category label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    font-size: 0.9em;
+}
+.settings-category input[type="text"],
+.settings-category input[type="url"],
+.settings-category select {
+    width: 100%;
+    margin-bottom: 12px;
+    padding: 8px 12px;
+}
+.settings-category textarea {
+    width: 100%;
+    margin-bottom: 10px;
+    min-height: 120px;
+    resize: vertical;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.9em;
+}
+.button-group {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+#add-bookmark-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+#add-bookmark-form button {
+    align-self: flex-start;
+}
+
+#manage-bookmarks-list {
+    list-style: none;
+    padding: 0;
+}
+#manage-bookmarks-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 10px;
+    background-color: var(--bg-tertiary);
+    border-radius: var(--border-radius);
+    margin-bottom: 8px;
+    font-size: 0.95em;
+}
+#manage-bookmarks-list .bookmark-info {
+    flex-grow: 1;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    margin-right: 10px;
+}
+#manage-bookmarks-list .bookmark-url-small {
+    font-size: 0.8em;
+    color: var(--text-placeholder);
+    display: block;
+}
+#manage-bookmarks-list .delete-bookmark-btn {
+    background-color: transparent;
+    color: var(--danger-color);
+    border: none;
+    font-size: 1.1em;
+    padding: 5px;
+}
+#manage-bookmarks-list .delete-bookmark-btn:hover {
+    color: var(--bg-primary);
+    background-color: var(--danger-color);
+}
+
+/* Custom Scrollbar for Modal Body and global (Webkit) */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+::-webkit-scrollbar-track {
+    background: var(--bg-tertiary);
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--text-placeholder); /* Slightly lighter on hover */
+}
+
+
+@media (max-width: 768px) {
+    body { padding: 10px; }
+    .container { padding: 0 5px; }
+    header { flex-direction: column; gap: 10px; }
+    .clock-widget { order: -1; text-align: center; width: 100%; }
+    #settings-btn { position: absolute; top: 15px; right: 15px; }
+    h1.main-title { font-size: 1.8em; }
+    #search-form { flex-direction: column; }
+    .bookmarks-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+    .modal-content { margin: 5% auto; width: 95%; padding: 20px; }
+}
+@media (max-width: 480px) {
+    .bookmarks-grid { grid-template-columns: 1fr; }
+    .bookmark-item { padding: 10px; }
+    .clock-widget #time { font-size: 1.2em; }
+    .clock-widget #date { font-size: 0.8em; }
 }

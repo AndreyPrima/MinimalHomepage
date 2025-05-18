@@ -3,47 +3,155 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minimal Homepage</title>
+    <title>My Advanced Dashboard v2</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚀</text></svg>">
 </head>
-<body>
+<body data-theme="dark">
+
     <div class="container">
         <header>
-            <h1>Minimal Homepage.</h1>
-            <a href="#" id="settings-link" class="settings">Settings <span class="settings-icon">⚪</span></a>
-            <!-- Или используйте SVG для иконки настроек для лучшего вида -->
-            <!-- <a href="#" id="settings-link" class="settings">Settings 
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="3"></circle>
-                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V12a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-                </svg>
-            </a> -->
+            <div id="clock-widget" class="clock-widget">
+                <span id="time"></span>
+                <span id="date"></span>
+            </div>
+            <div class="title-container">
+                <h1 class="main-title">Dashboard</h1>
+            </div>
+            <button id="settings-btn" class="icon-btn" aria-label="Settings">
+                <i class="fas fa-cog"></i>
+            </button>
         </header>
 
-        <div class="search-section">
-            <form id="search-form">
-                <input type="text" id="search-input" placeholder="Search (I can choose the engine)">
-                <select id="search-engine">
-                    <option value="google">Google</option>
-                    <option value="duckduckgo">DuckDuckGo</option>
-                    <option value="bing">Bing</option>
-                    <option value="yandex">Yandex</option>
-                </select>
-                <!-- Можно добавить кнопку, если хотите -->
-                <!-- <button type="submit">Search</button> -->
-            </form>
-        </div>
+        <main>
+            <section class="search-section card">
+                <form id="search-form" role="search">
+                    <div class="search-input-wrapper">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" id="search-input" placeholder="Explore the universe..." aria-label="Search query">
+                    </div>
+                    <div class="select-wrapper">
+                        <select id="search-engine" aria-label="Select search engine">
+                            <option value="google">Google</option>
+                            <option value="duckduckgo">DuckDuckGo</option>
+                            <option value="searxng">SearXNG (Meta-Private)</option>
+                            <option value="brave">Brave Search</option>
+                            <option value="startpage">Startpage</option>
+                            <option value="qwant">Qwant</option>
+                            <option value="ecosia">Ecosia</option>
+                            <option value="swisscows">Swisscows</option>
+                            <option value="metager">MetaGer</option>
+                            <option value="mojeek">Mojeek</option>
+                            <option value="wolfram">Wolfram Alpha</option>
+                            <option value="wikipedia">Wikipedia</option>
+                            <option value="youtube">YouTube</option>
+                            <option value="github">GitHub (Code)</option>
+                            <option value="stackoverflow">Stack Overflow</option>
+                            <option value="reddit">Reddit</option>
+                            <option value="npm">NPM (Packages)</option>
+                            <option value="archiveorg">Internet Archive</option>
+                            <option value="openverse">Openverse (Media)</option>
+                            <option value="unsplash">Unsplash (Photos)</option>
+                            <option value="yandex">Yandex</option>
+                            <option value="bing">Bing</option>
+                        </select>
+                        <i class="fas fa-chevron-down select-arrow"></i>
+                    </div>
+                    <button type="submit" class="search-submit-btn" aria-label="Submit search">
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </form>
+            </section>
 
-        <div class="quick-links-section">
-            <h2>Quick links, bookmarks.</h2>
-            <div id="bookmarks-container">
-                <!-- Сюда будут добавляться закладки через JS или можно вписать статично -->
-                <!-- Пример статической закладки: -->
-                <!-- <a href="https://github.com" class="bookmark-link" target="_blank">GitHub</a> -->
+            <section id="quick-links-dropzone" class="quick-links-section card">
+                <div class="card-header">
+                    <h2>Quick Links</h2>
+                    <button id="add-bookmark-shortcut-btn" class="icon-btn small-btn" aria-label="Add Bookmark via settings">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+                <div id="bookmarks-container" class="bookmarks-grid">
+                    <p class="no-bookmarks-message" style="display: none;">No bookmarks yet. Add some manually or drag & drop links here!</p>
+                </div>
+                 <p id="drag-drop-hint-text" class="drag-drop-hint">Drag & drop web links or selected bookmarks here!</p>
+            </section>
+        </main>
+    </div>
+
+    <div id="settings-modal" class="modal" role="dialog" aria-labelledby="settings-modal-title" aria-hidden="true">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="settings-modal-title"><i class="fas fa-cogs"></i> Settings</h2>
+                <button id="close-settings-modal" class="icon-btn close-btn" aria-label="Close Settings">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="settings-category">
+                    <h3><i class="fas fa-paint-brush"></i> Appearance</h3>
+                    <label for="theme-select">Theme:</label>
+                    <select id="theme-select" disabled>
+                        <option value="dark" selected>Dark Fusion</option>
+                    </select>
+                </div>
+
+                <div class="settings-category">
+                    <h3><i class="fas fa-search"></i> Search</h3>
+                    <label for="default-search-engine">Default Search Engine:</label>
+                    <select id="default-search-engine">
+                        <option value="google">Google</option>
+                        <option value="duckduckgo">DuckDuckGo</option>
+                        <option value="searxng">SearXNG (Meta-Private)</option>
+                        <option value="brave">Brave Search</option>
+                        <option value="startpage">Startpage</option>
+                        <option value="qwant">Qwant</option>
+                        <option value="ecosia">Ecosia</option>
+                        <option value="swisscows">Swisscows</option>
+                        <option value="metager">MetaGer</option>
+                        <option value="mojeek">Mojeek</option>
+                        <option value="wolfram">Wolfram Alpha</option>
+                        <option value="wikipedia">Wikipedia</option>
+                        <option value="youtube">YouTube</option>
+                        <option value="github">GitHub (Code)</option>
+                        <option value="stackoverflow">Stack Overflow</option>
+                        <option value="reddit">Reddit</option>
+                        <option value="npm">NPM (Packages)</option>
+                        <option value="archiveorg">Internet Archive</option>
+                        <option value="openverse">Openverse (Media)</option>
+                        <option value="unsplash">Unsplash (Photos)</option>
+                        <option value="yandex">Yandex</option>
+                        <option value="bing">Bing</option>
+                    </select>
+                </div>
+
+                <div class="settings-category">
+                    <h3><i class="fas fa-bookmark"></i> Bookmarks</h3>
+                    <form id="add-bookmark-form">
+                        <label for="bookmark-name">Name:</label>
+                        <input type="text" id="bookmark-name" placeholder="e.g., My Favorite Site" required>
+                        <label for="bookmark-url">URL:</label>
+                        <input type="url" id="bookmark-url" placeholder="https://example.com" required>
+                        <button type="submit" class="action-btn"><i class="fas fa-plus-circle"></i> Add Bookmark</button>
+                    </form>
+                    <h4>Manage Bookmarks:</h4>
+                    <ul id="manage-bookmarks-list"></ul>
+                </div>
+                 <div class="settings-category">
+                    <h3><i class="fas fa-code"></i> Custom CSS</h3>
+                    <textarea id="custom-css" placeholder="Enter your custom CSS here..." aria-label="Custom CSS input"></textarea>
+                    <div class="button-group">
+                        <button id="apply-custom-css" class="action-btn"><i class="fas fa-check"></i> Apply CSS</button>
+                        <button id="clear-custom-css" class="action-btn secondary-btn"><i class="fas fa-times"></i> Clear CSS</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-
+    <style id="user-custom-css"></style>
     <script src="script.js"></script>
 </body>
 </html>
